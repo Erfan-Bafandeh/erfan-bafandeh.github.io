@@ -22,4 +22,13 @@
         </div>
     </div>
 </body>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('Status');
+
+    if (status === 'NOK') {
+        window.location.href = 'https://erfan-bafandeh.github.io/ThankForBuy/ErrorPage.html';
+    }
+</script>
+
 </html>
