@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>صفحه دکمه‌ها</title>
+  <style>
+    :root {
+      --bg-dark: #0d1513;
+      --bg-card: #142824;
+      --accent-green: #00c48c;
+      --text-primary: #e0f5ee;
+      --text-secondary: #a8d8ca;
+      --border: #00c48c30;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-dark);
+      color: var(--text-primary);
+      font-family: 'Vazirmatn', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 0 20px #00c48c20;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .profile-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent-green);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      margin: 0.5rem 0;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+
+    p {
+      margin-bottom: 2rem;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .btn {
+      background-color: transparent;
+      border: 2px solid var(--accent-green);
+      color: var(--accent-green);
+      padding: 0.75rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background-color: var(--accent-green);
+      color: var(--bg-dark);
+      transform: scale(1.05);
+      box-shadow: 0 0 10px var(--accent-green);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="https://i.pravatar.cc/100" alt="Profile" class="profile-img" />
+    <h1>عنوان صفحه</h1>
+    <p>توضیحی کوتاه درباره این صفحه یا خودت بنویس.</p>
+    <div class="button-grid">
+      <a href="https://example.com/1" class="btn">لینک اول</a>
+      <a href="https://example.com/2" class="btn">لینک دوم</a>
+      <a href="https://example.com/3" class="btn">لینک سوم</a>
+      <a href="https://example.com/4" class="btn">لینک چهارم</a>
+    </div>
+  </div>
+</body>
+</html>
