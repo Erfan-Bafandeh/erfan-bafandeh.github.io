@@ -1,0 +1,1016 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>سیستم مدیریت گیمنت</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel-2: #1f2937;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --line: #374151;
+      --brand: #38bdf8;
+      --brand-2: #0ea5e9;
+      --danger: #ef4444;
+      --danger-2: #b91c1c;
+      --ok: #22c55e;
+      --warning: #f59e0b;
+      --shadow: 0 16px 50px rgba(0, 0, 0, 0.25);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Tahoma, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.14), transparent 28rem),
+        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.10), transparent 30rem),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 18px 12px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(24px, 4vw, 40px);
+      letter-spacing: -1px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.9;
+    }
+
+    .storage-badge {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #bae6fd;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 14px 18px 44px;
+    }
+
+    nav {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 18px 0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 10px 0;
+      backdrop-filter: blur(10px);
+    }
+
+    .tab-btn {
+      border: 1px solid var(--line);
+      background: rgba(17, 24, 39, 0.86);
+      color: var(--text);
+      padding: 13px 12px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .tab-btn:hover,
+    .tab-btn.active {
+      border-color: rgba(56, 189, 248, 0.8);
+      background: rgba(14, 165, 233, 0.18);
+      transform: translateY(-1px);
+    }
+
+    section.page { display: none; }
+    section.page.active { display: block; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+
+    .card {
+      grid-column: span 12;
+      background: rgba(17, 24, 39, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .card h2, .card h3 {
+      margin: 0 0 14px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    label {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 7px;
+      font-size: 13px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #0b1220;
+      color: var(--text);
+      border-radius: 13px;
+      padding: 12px 12px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.14);
+    }
+
+    button {
+      border: 0;
+      border-radius: 13px;
+      padding: 12px 15px;
+      cursor: pointer;
+      color: white;
+      background: var(--brand-2);
+      font-family: inherit;
+      font-weight: 800;
+      transition: 0.18s ease;
+    }
+
+    button:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    button:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+    .btn-muted { background: #334155; }
+    .btn-danger { background: var(--danger-2); }
+    .btn-ok { background: #15803d; }
+    .btn-warning { background: #b45309; }
+    .btn-small { padding: 8px 10px; font-size: 12px; border-radius: 10px; }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+      background: rgba(15, 23, 42, 0.55);
+    }
+
+    th, td {
+      padding: 12px 10px;
+      text-align: right;
+      border-bottom: 1px solid rgba(55, 65, 81, 0.72);
+      vertical-align: middle;
+    }
+
+    th {
+      color: #cbd5e1;
+      background: rgba(30, 41, 59, 0.75);
+      font-size: 13px;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .timer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 14px;
+    }
+
+    .timer-card {
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.88), rgba(15, 23, 42, 0.95));
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .timer-card.active {
+      border-color: rgba(34, 197, 94, 0.65);
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.08);
+    }
+
+    .timer-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .timer-title strong { font-size: 18px; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 12px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.6);
+      white-space: nowrap;
+    }
+
+    .pill.green { color: #bbf7d0; border-color: rgba(34, 197, 94, 0.45); background: rgba(34, 197, 94, 0.10); }
+    .pill.yellow { color: #fde68a; border-color: rgba(245, 158, 11, 0.45); background: rgba(245, 158, 11, 0.10); }
+
+    .time-display {
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      direction: ltr;
+      text-align: center;
+      padding: 14px 0 10px;
+      color: #f8fafc;
+    }
+
+    .timer-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 10px 0 15px;
+    }
+
+    .meta-box {
+      border: 1px solid rgba(55, 65, 81, 0.8);
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 13px;
+      padding: 10px;
+    }
+
+    .meta-box span { display: block; color: var(--muted); font-size: 12px; margin-bottom: 5px; }
+    .meta-box b { display: block; font-size: 14px; }
+
+    .timer-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .stat {
+      background: rgba(30, 41, 59, 0.72);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .stat span { color: var(--muted); font-size: 13px; }
+    .stat b { display: block; margin-top: 8px; font-size: 26px; }
+
+    .empty {
+      border: 1px dashed rgba(148, 163, 184, 0.45);
+      border-radius: 16px;
+      padding: 20px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.9;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .toolbar .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: end;
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.9;
+      margin-top: 14px;
+    }
+
+    .notice {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #fde68a;
+      padding: 12px 14px;
+      border-radius: 14px;
+      line-height: 1.9;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 760px) {
+      nav { grid-template-columns: 1fr 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .timer-meta { grid-template-columns: 1fr; }
+      .timer-actions { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div>
+        <h1>سیستم مدیریت گیمنت</h1>
+        <p class="subtitle">مدیریت میزها، تایمر، تاریخچه و گزارش درآمد بدون نیاز به دیتابیس یا هاست.</p>
+      </div>
+      <div class="storage-badge" id="storageBadge">در حال بررسی ذخیره‌سازی...</div>
+    </div>
+  </header>
+
+  <main>
+    <nav aria-label="صفحات برنامه">
+      <button class="tab-btn active" data-page="tablesPage">تعریف میزها</button>
+      <button class="tab-btn" data-page="timersPage">تایمر میزها</button>
+      <button class="tab-btn" data-page="historyPage">تاریخچه میز</button>
+      <button class="tab-btn" data-page="reportsPage">درآمدها</button>
+    </nav>
+
+    <section class="page active" id="tablesPage">
+      <div class="grid">
+        <div class="card">
+          <h2>تعریف میز و هزینه</h2>
+          <form class="form-row" id="tableForm">
+            <div>
+              <label for="tableName">نام میز</label>
+              <input id="tableName" required placeholder="مثلا: میز PS5 شماره ۱" />
+            </div>
+            <div>
+              <label for="tableRate">هزینه هر ساعت / تومان</label>
+              <input id="tableRate" required type="number" min="0" step="1000" placeholder="مثلا: 80000" />
+            </div>
+            <button type="submit" id="saveTableBtn">افزودن میز</button>
+          </form>
+          <p class="footer-note">برای ویرایش، روی دکمه ویرایش کنار هر میز بزنید. تاریخچه میزهای حذف‌شده پاک نمی‌شود.</p>
+        </div>
+
+        <div class="card">
+          <div class="toolbar">
+            <h3>لیست میزها</h3>
+            <button class="btn-muted btn-small" id="sampleDataBtn" type="button">افزودن داده نمونه</button>
+          </div>
+          <div id="tablesList"></div>
+        </div>
+
+        <div class="card">
+          <h3>پشتیبان‌گیری و انتقال داده</h3>
+          <div class="actions">
+            <button type="button" class="btn-muted" id="exportBtn">خروجی JSON</button>
+            <button type="button" class="btn-warning" id="importBtn">ورودی JSON</button>
+            <button type="button" class="btn-danger" id="resetBtn">حذف همه داده‌ها</button>
+          </div>
+          <textarea id="backupBox" rows="5" placeholder="برای خروجی گرفتن، دکمه خروجی JSON را بزنید. برای بازیابی، JSON را اینجا بچسبانید و ورودی JSON را بزنید." style="margin-top:12px"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="timersPage">
+      <div class="card">
+        <div class="toolbar">
+          <h2>تایمر میزها</h2>
+          <span class="pill yellow">اگر صفحه بسته شود، تایمرهای فعال با زمان شروع ذخیره‌شده ادامه پیدا می‌کنند.</span>
+        </div>
+        <div id="timerList"></div>
+      </div>
+    </section>
+
+    <section class="page" id="historyPage">
+      <div class="card">
+        <div class="toolbar">
+          <h2>تاریخچه میز</h2>
+          <div class="filters">
+            <div>
+              <label for="historyTableFilter">فیلتر میز</label>
+              <select id="historyTableFilter"></select>
+            </div>
+            <div>
+              <label for="historyMonthFilter">فیلتر زمان</label>
+              <select id="historyMonthFilter">
+                <option value="all">همه تاریخچه</option>
+                <option value="current">فقط ماه جاری</option>
+              </select>
+            </div>
+            <button type="button" class="btn-danger" id="clearHistoryBtn">پاک‌کردن تاریخچه</button>
+          </div>
+        </div>
+        <div id="historyList"></div>
+      </div>
+    </section>
+
+    <section class="page" id="reportsPage">
+      <div class="card">
+        <h2>درآمد کل و ماهانه</h2>
+        <div class="stats-grid" id="globalStats"></div>
+        <div id="tableReports"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "gnm_data_v1";
+    const COOKIE_DAYS = 3650;
+    const COOKIE_CHUNK_SIZE = 3400;
+
+    let editTableId = null;
+    let data = loadData();
+
+    const els = {
+      storageBadge: document.getElementById("storageBadge"),
+      tableForm: document.getElementById("tableForm"),
+      tableName: document.getElementById("tableName"),
+      tableRate: document.getElementById("tableRate"),
+      saveTableBtn: document.getElementById("saveTableBtn"),
+      tablesList: document.getElementById("tablesList"),
+      timerList: document.getElementById("timerList"),
+      historyList: document.getElementById("historyList"),
+      historyTableFilter: document.getElementById("historyTableFilter"),
+      historyMonthFilter: document.getElementById("historyMonthFilter"),
+      globalStats: document.getElementById("globalStats"),
+      tableReports: document.getElementById("tableReports"),
+      backupBox: document.getElementById("backupBox")
+    };
+
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.page).classList.add("active");
+        renderAll();
+      });
+    });
+
+    els.tableForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const name = els.tableName.value.trim();
+      const rate = Number(els.tableRate.value);
+
+      if (!name) return alert("نام میز را وارد کنید.");
+      if (Number.isNaN(rate) || rate < 0) return alert("هزینه هر ساعت باید عدد معتبر باشد.");
+
+      if (editTableId) {
+        const table = data.tables.find(t => t.id === editTableId);
+        if (table) {
+          table.name = name;
+          table.rate = rate;
+        }
+        editTableId = null;
+        els.saveTableBtn.textContent = "افزودن میز";
+      } else {
+        data.tables.push({ id: makeId(), name, rate, createdAt: Date.now() });
+      }
+
+      els.tableForm.reset();
+      persistAndRender();
+    });
+
+    document.getElementById("sampleDataBtn").addEventListener("click", () => {
+      if (data.tables.length && !confirm("داده نمونه به لیست فعلی اضافه شود؟")) return;
+      data.tables.push(
+        { id: makeId(), name: "میز PS5 شماره ۱", rate: 90000, createdAt: Date.now() },
+        { id: makeId(), name: "میز PS5 شماره ۲", rate: 90000, createdAt: Date.now() },
+        { id: makeId(), name: "میز PC شماره ۱", rate: 70000, createdAt: Date.now() }
+      );
+      persistAndRender();
+    });
+
+    document.getElementById("exportBtn").addEventListener("click", () => {
+      els.backupBox.value = JSON.stringify(data, null, 2);
+      els.backupBox.focus();
+      els.backupBox.select();
+    });
+
+    document.getElementById("importBtn").addEventListener("click", () => {
+      try {
+        const imported = JSON.parse(els.backupBox.value);
+        if (!Array.isArray(imported.tables) || !Array.isArray(imported.sessions)) {
+          throw new Error("ساختار فایل معتبر نیست.");
+        }
+        data = normalizeData(imported);
+        persistAndRender();
+        alert("داده‌ها با موفقیت بازیابی شدند.");
+      } catch (err) {
+        alert("JSON واردشده معتبر نیست یا ساختار پروژه را ندارد.");
+      }
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if (!confirm("همه میزها، تایمرها و تاریخچه پاک شود؟")) return;
+      data = { tables: [], sessions: [] };
+      persistAndRender();
+    });
+
+    document.getElementById("clearHistoryBtn").addEventListener("click", () => {
+      if (!confirm("تمام تاریخچه‌های پایان‌یافته حذف شوند؟ تایمرهای فعال دست‌نخورده می‌مانند.")) return;
+      data.sessions = data.sessions.filter(s => !s.end);
+      persistAndRender();
+    });
+
+    els.historyTableFilter.addEventListener("change", renderHistory);
+    els.historyMonthFilter.addEventListener("change", renderHistory);
+
+    function renderAll() {
+      setStorageBadge();
+      renderTables();
+      renderTimers();
+      renderHistoryFilters();
+      renderHistory();
+      renderReports();
+    }
+
+    function persistAndRender() {
+      saveData(data);
+      renderAll();
+    }
+
+    function renderTables() {
+      if (!data.tables.length) {
+        els.tablesList.innerHTML = `<div class="empty">هنوز میزی تعریف نشده است. از فرم بالا یک میز اضافه کنید.</div>`;
+        return;
+      }
+
+      els.tablesList.innerHTML = `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>نام میز</th>
+                <th>هزینه هر ساعت</th>
+                <th>وضعیت</th>
+                <th>عملیات</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${data.tables.map(table => {
+                const active = getActiveSession(table.id);
+                return `
+                  <tr>
+                    <td><strong>${escapeHtml(table.name)}</strong></td>
+                    <td>${formatMoney(table.rate)}</td>
+                    <td>${active ? `<span class="pill green">فعال</span>` : `<span class="pill">آزاد</span>`}</td>
+                    <td>
+                      <div class="actions">
+                        <button class="btn-small btn-muted" onclick="editTable('${table.id}')">ویرایش</button>
+                        <button class="btn-small btn-danger" onclick="deleteTable('${table.id}')">حذف</button>
+                      </div>
+                    </td>
+                  </tr>
+                `;
+              }).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderTimers() {
+      if (!data.tables.length) {
+        els.timerList.innerHTML = `<div class="empty">برای استفاده از تایمر، ابتدا در بخش «تعریف میزها» میز اضافه کنید.</div>`;
+        return;
+      }
+
+      els.timerList.innerHTML = `
+        <div class="timer-grid">
+          ${data.tables.map(table => {
+            const session = getActiveSession(table.id);
+            const elapsed = session ? Date.now() - session.start : 0;
+            const estimated = session ? calcCost(table.rate, elapsed) : 0;
+            return `
+              <div class="timer-card ${session ? "active" : ""}">
+                <div class="timer-title">
+                  <strong>${escapeHtml(table.name)}</strong>
+                  ${session ? `<span class="pill green">در حال استفاده</span>` : `<span class="pill">آزاد</span>`}
+                </div>
+                <div class="time-display" data-timer-table="${table.id}">${formatDuration(elapsed)}</div>
+                <div class="timer-meta">
+                  <div class="meta-box">
+                    <span>نرخ هر ساعت</span>
+                    <b>${formatMoney(table.rate)}</b>
+                  </div>
+                  <div class="meta-box">
+                    <span>هزینه فعلی</span>
+                    <b data-cost-table="${table.id}">${formatMoney(estimated)}</b>
+                  </div>
+                </div>
+                <div class="timer-actions">
+                  <button class="btn-ok" onclick="startTimer('${table.id}')" ${session ? "disabled" : ""}>شروع</button>
+                  <button class="btn-danger" onclick="stopTimer('${table.id}')" ${session ? "" : "disabled"}>پایان</button>
+                </div>
+                ${session ? `<p class="footer-note">شروع: ${formatDateTime(session.start)}</p>` : ""}
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function renderHistoryFilters() {
+      const currentValue = els.historyTableFilter.value || "all";
+      const options = [`<option value="all">همه میزها</option>`]
+        .concat(getAllTableRefs().map(t => `<option value="${t.id}">${escapeHtml(t.name)}</option>`));
+      els.historyTableFilter.innerHTML = options.join("");
+      els.historyTableFilter.value = [...els.historyTableFilter.options].some(o => o.value === currentValue) ? currentValue : "all";
+    }
+
+    function renderHistory() {
+      const selectedTable = els.historyTableFilter.value || "all";
+      const monthMode = els.historyMonthFilter.value || "all";
+      let sessions = data.sessions.filter(s => s.end);
+
+      if (selectedTable !== "all") sessions = sessions.filter(s => s.tableId === selectedTable);
+      if (monthMode === "current") sessions = sessions.filter(s => isCurrentMonth(s.end));
+
+      sessions = sessions.sort((a, b) => b.end - a.end);
+
+      if (!sessions.length) {
+        els.historyList.innerHTML = `<div class="empty">تاریخچه‌ای برای نمایش وجود ندارد.</div>`;
+        return;
+      }
+
+      els.historyList.innerHTML = `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>میز</th>
+                <th>شروع</th>
+                <th>پایان</th>
+                <th>مدت</th>
+                <th>هزینه</th>
+                <th>عملیات</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${sessions.map(s => `
+                <tr>
+                  <td><strong>${escapeHtml(s.tableName || getTableName(s.tableId))}</strong></td>
+                  <td>${formatDateTime(s.start)}</td>
+                  <td>${formatDateTime(s.end)}</td>
+                  <td>${formatDuration(s.durationMs || (s.end - s.start))}</td>
+                  <td>${formatMoney(s.cost || 0)}</td>
+                  <td><button class="btn-small btn-danger" onclick="deleteSession('${s.id}')">حذف</button></td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderReports() {
+      const completed = data.sessions.filter(s => s.end);
+      const totalIncome = sum(completed.map(s => s.cost || 0));
+      const monthlyIncome = sum(completed.filter(s => isCurrentMonth(s.end)).map(s => s.cost || 0));
+      const totalTime = sum(completed.map(s => s.durationMs || 0));
+
+      els.globalStats.innerHTML = `
+        <div class="stat"><span>درآمد کل</span><b>${formatMoney(totalIncome)}</b></div>
+        <div class="stat"><span>درآمد ماه جاری</span><b>${formatMoney(monthlyIncome)}</b></div>
+        <div class="stat"><span>تعداد سرویس‌های ثبت‌شده</span><b>${formatNumber(completed.length)}</b></div>
+        <div class="stat"><span>زمان کل استفاده</span><b>${formatDuration(totalTime)}</b></div>
+      `;
+
+      const refs = getAllTableRefs();
+      if (!refs.length) {
+        els.tableReports.innerHTML = `<div class="empty">برای گزارش‌گیری، ابتدا میز یا تاریخچه داشته باشید.</div>`;
+        return;
+      }
+
+      els.tableReports.innerHTML = `
+        <h3 style="margin-top:18px">درآمد به تفکیک هر میز</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>میز</th>
+                <th>درآمد کل میز</th>
+                <th>درآمد ماه جاری میز</th>
+                <th>تعداد سرویس</th>
+                <th>زمان کل</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${refs.map(ref => {
+                const items = completed.filter(s => s.tableId === ref.id);
+                const tableTotal = sum(items.map(s => s.cost || 0));
+                const tableMonthly = sum(items.filter(s => isCurrentMonth(s.end)).map(s => s.cost || 0));
+                const tableTime = sum(items.map(s => s.durationMs || 0));
+                return `
+                  <tr>
+                    <td><strong>${escapeHtml(ref.name)}</strong></td>
+                    <td>${formatMoney(tableTotal)}</td>
+                    <td>${formatMoney(tableMonthly)}</td>
+                    <td>${formatNumber(items.length)}</td>
+                    <td>${formatDuration(tableTime)}</td>
+                  </tr>
+                `;
+              }).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    window.editTable = function(id) {
+      const table = data.tables.find(t => t.id === id);
+      if (!table) return;
+      editTableId = id;
+      els.tableName.value = table.name;
+      els.tableRate.value = table.rate;
+      els.saveTableBtn.textContent = "ذخیره ویرایش";
+      document.querySelector('[data-page="tablesPage"]').click();
+      els.tableName.focus();
+    };
+
+    window.deleteTable = function(id) {
+      if (getActiveSession(id)) return alert("این میز تایمر فعال دارد. ابتدا تایمر را پایان دهید.");
+      const table = data.tables.find(t => t.id === id);
+      if (!table) return;
+      if (!confirm(`میز «${table.name}» حذف شود؟ تاریخچه آن باقی می‌ماند.`)) return;
+      data.tables = data.tables.filter(t => t.id !== id);
+      if (editTableId === id) {
+        editTableId = null;
+        els.tableForm.reset();
+        els.saveTableBtn.textContent = "افزودن میز";
+      }
+      persistAndRender();
+    };
+
+    window.startTimer = function(tableId) {
+      const table = data.tables.find(t => t.id === tableId);
+      if (!table) return;
+      if (getActiveSession(tableId)) return alert("برای این میز تایمر فعال وجود دارد.");
+
+      data.sessions.push({
+        id: makeId(),
+        tableId,
+        tableName: table.name,
+        rateAtStart: table.rate,
+        start: Date.now(),
+        end: null,
+        durationMs: 0,
+        cost: 0
+      });
+      persistAndRender();
+    };
+
+    window.stopTimer = function(tableId) {
+      const table = data.tables.find(t => t.id === tableId);
+      const session = getActiveSession(tableId);
+      if (!table || !session) return;
+
+      const end = Date.now();
+      const durationMs = Math.max(0, end - session.start);
+      const rate = Number(session.rateAtStart ?? table.rate) || 0;
+      session.end = end;
+      session.durationMs = durationMs;
+      session.cost = calcCost(rate, durationMs);
+      persistAndRender();
+    };
+
+    window.deleteSession = function(sessionId) {
+      if (!confirm("این رکورد از تاریخچه حذف شود؟")) return;
+      data.sessions = data.sessions.filter(s => s.id !== sessionId);
+      persistAndRender();
+    };
+
+    function getActiveSession(tableId) {
+      return data.sessions.find(s => s.tableId === tableId && !s.end);
+    }
+
+    function getTableName(tableId) {
+      const table = data.tables.find(t => t.id === tableId);
+      return table ? table.name : "میز حذف‌شده";
+    }
+
+    function getAllTableRefs() {
+      const map = new Map();
+      data.tables.forEach(t => map.set(t.id, { id: t.id, name: t.name }));
+      data.sessions.forEach(s => {
+        if (!map.has(s.tableId)) map.set(s.tableId, { id: s.tableId, name: s.tableName || "میز حذف‌شده" });
+      });
+      return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name, "fa"));
+    }
+
+    function calcCost(ratePerHour, durationMs) {
+      return Math.round((Number(ratePerHour) || 0) * (durationMs / 3600000));
+    }
+
+    function isCurrentMonth(timestamp) {
+      const d = new Date(timestamp);
+      const now = new Date();
+      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+    }
+
+    function sum(numbers) {
+      return numbers.reduce((acc, n) => acc + (Number(n) || 0), 0);
+    }
+
+    function formatMoney(value) {
+      return `${formatNumber(Math.round(Number(value) || 0))} تومان`;
+    }
+
+    function formatNumber(value) {
+      return new Intl.NumberFormat("fa-IR").format(Number(value) || 0);
+    }
+
+    function formatDateTime(timestamp) {
+      if (!timestamp) return "-";
+      return new Intl.DateTimeFormat("fa-IR", {
+        year: "numeric", month: "2-digit", day: "2-digit",
+        hour: "2-digit", minute: "2-digit", second: "2-digit"
+      }).format(new Date(timestamp));
+    }
+
+    function formatDuration(ms) {
+      ms = Math.max(0, Number(ms) || 0);
+      const totalSeconds = Math.floor(ms / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      return [hours, minutes, seconds].map(n => String(n).padStart(2, "0")).join(":");
+    }
+
+    function makeId() {
+      return `${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function normalizeData(raw) {
+      return {
+        tables: Array.isArray(raw.tables) ? raw.tables.map(t => ({
+          id: String(t.id || makeId()),
+          name: String(t.name || "میز بدون نام"),
+          rate: Number(t.rate) || 0,
+          createdAt: Number(t.createdAt) || Date.now()
+        })) : [],
+        sessions: Array.isArray(raw.sessions) ? raw.sessions.map(s => ({
+          id: String(s.id || makeId()),
+          tableId: String(s.tableId || ""),
+          tableName: String(s.tableName || "میز"),
+          rateAtStart: Number(s.rateAtStart) || 0,
+          start: Number(s.start) || Date.now(),
+          end: s.end ? Number(s.end) : null,
+          durationMs: Number(s.durationMs) || (s.end ? Number(s.end) - Number(s.start) : 0),
+          cost: Number(s.cost) || 0
+        })) : []
+      };
+    }
+
+    function loadData() {
+      const cookieValue = getChunkedCookie(STORAGE_KEY);
+      if (cookieValue) {
+        try { return normalizeData(JSON.parse(cookieValue)); } catch (_) {}
+      }
+
+      const backup = localStorage.getItem(STORAGE_KEY);
+      if (backup) {
+        try { return normalizeData(JSON.parse(backup)); } catch (_) {}
+      }
+
+      return { tables: [], sessions: [] };
+    }
+
+    function saveData(value) {
+      const serialized = JSON.stringify(value);
+      localStorage.setItem(STORAGE_KEY, serialized); // بکاپ اضطراری برای مرورگرهایی که کوکی فایل محلی را قبول نمی‌کنند
+      setChunkedCookie(STORAGE_KEY, serialized, COOKIE_DAYS);
+    }
+
+    function canUseCookies() {
+      try {
+        const testName = "gnm_cookie_test";
+        document.cookie = `${testName}=1; max-age=60; path=/; SameSite=Lax`;
+        const ok = document.cookie.includes(`${testName}=1`);
+        document.cookie = `${testName}=; max-age=0; path=/; SameSite=Lax`;
+        return ok;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function setStorageBadge() {
+      els.storageBadge.textContent = canUseCookies()
+        ? "ذخیره‌سازی فعال: Cookie + Backup محلی"
+        : "مرورگر کوکی فایل محلی را نپذیرفت؛ ذخیره روی Backup محلی انجام می‌شود";
+    }
+
+    function setCookie(name, value, days) {
+      const maxAge = days * 24 * 60 * 60;
+      document.cookie = `${name}=${value}; max-age=${maxAge}; path=/; SameSite=Lax`;
+    }
+
+    function getCookie(name) {
+      const prefix = `${name}=`;
+      return document.cookie
+        .split(";")
+        .map(c => c.trim())
+        .find(c => c.startsWith(prefix))
+        ?.slice(prefix.length) || "";
+    }
+
+    function deleteCookie(name) {
+      document.cookie = `${name}=; max-age=0; path=/; SameSite=Lax`;
+    }
+
+    function setChunkedCookie(baseName, value, days) {
+      const encoded = encodeURIComponent(value);
+      const oldCount = Number(getCookie(`${baseName}_count`)) || 0;
+      for (let i = 0; i < Math.max(oldCount, 60); i++) deleteCookie(`${baseName}_${i}`);
+
+      const chunks = [];
+      for (let i = 0; i < encoded.length; i += COOKIE_CHUNK_SIZE) {
+        chunks.push(encoded.slice(i, i + COOKIE_CHUNK_SIZE));
+      }
+
+      setCookie(`${baseName}_count`, String(chunks.length), days);
+      chunks.forEach((chunk, index) => setCookie(`${baseName}_${index}`, chunk, days));
+    }
+
+    function getChunkedCookie(baseName) {
+      const count = Number(getCookie(`${baseName}_count`));
+      if (!count || count < 1) return "";
+      let encoded = "";
+      for (let i = 0; i < count; i++) {
+        const part = getCookie(`${baseName}_${i}`);
+        if (!part) return "";
+        encoded += part;
+      }
+      try { return decodeURIComponent(encoded); } catch (_) { return ""; }
+    }
+
+    setInterval(() => {
+      data.tables.forEach(table => {
+        const session = getActiveSession(table.id);
+        if (!session) return;
+        const elapsed = Date.now() - session.start;
+        const timerEl = document.querySelector(`[data-timer-table="${table.id}"]`);
+        const costEl = document.querySelector(`[data-cost-table="${table.id}"]`);
+        if (timerEl) timerEl.textContent = formatDuration(elapsed);
+        if (costEl) costEl.textContent = formatMoney(calcCost(session.rateAtStart ?? table.rate, elapsed));
+      });
+    }, 1000);
+
+    renderAll();
+  </script>
+</body>
+</html>
