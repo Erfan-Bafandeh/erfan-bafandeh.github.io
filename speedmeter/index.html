@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>کیلومترسنج حرفه‌ای | خروجی‌های پیشرفته</title>
+    <title>کیلومترسنج | خروجی عکس برای فیلم</title>
     <!-- Leaflet for map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- html2canvas for screenshot -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- jsPDF for PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <!-- Google Font (Vazir) -->
@@ -423,6 +421,56 @@
             flex-wrap: wrap;
         }
 
+        /* ---------- تنظیمات عکس ---------- */
+        .photo-settings {
+            background: #0f1928;
+            border-radius: 16px;
+            padding: 10px 14px;
+            border: 1px solid #1e3146;
+            margin-bottom: 8px;
+            flex-shrink: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .photo-settings label {
+            font-size: 11px;
+            color: #7a8ba5;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .photo-settings input[type="range"] {
+            width: 100px;
+            background: #1f3146;
+            height: 4px;
+            border-radius: 4px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .photo-settings input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #60a5fa;
+            cursor: pointer;
+        }
+
+        .photo-settings select {
+            background: #1f3146;
+            color: #e8edf5;
+            border: 1px solid #2f405a;
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-family: 'Vazir', sans-serif;
+            font-size: 11px;
+        }
+
         /* ---------- ریسپانسیو ---------- */
         @media screen and (max-width: 992px) {
             .params-grid {
@@ -467,6 +515,13 @@
                 top: 3px;
                 right: 8px;
             }
+            .photo-settings {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .photo-settings input[type="range"] {
+                width: 100%;
+            }
         }
 
         @media screen and (max-width: 480px) {
@@ -505,11 +560,16 @@
 </head>
 <body>
 
-    <!-- ====== مودال نمایش خروجی ====== -->
-    <div class="modal-overlay" id="outputModal">
+    <!-- ====== مودال نمایش عکس ====== -->
+    <div class="modal-overlay" id="screenshotModal">
         <div class="modal-content">
             <button class="modal-close" id="modalCloseBtn">&times;</button>
-            <div id="modalBody"></div>
+            <img id="screenshotImage" src="" alt="گزارش تصویری سفر" />
+            <div class="modal-actions">
+                <button class="btn btn-success" id="downloadPngBtn"><i class="fas fa-download"></i> دانلود PNG (شفاف)</button>
+                <button class="btn btn-purple" id="downloadJpgBtn"><i class="fas fa-download"></i> دانلود JPG</button>
+                <button class="btn btn-warning" id="modalCloseBtn2"><i class="fas fa-times"></i> بستن</button>
+            </div>
         </div>
     </div>
 
@@ -522,22 +582,47 @@
                 <!-- ====== HEADER ====== -->
                 <header class="header">
                     <div>
-                        <h1><i class="fas fa-satellite" style="margin-left: 6px; color: #60a5fa;"></i> کیلومترسنج حرفه‌ای</h1>
+                        <h1><i class="fas fa-satellite" style="margin-left: 6px; color: #60a5fa;"></i> کیلومترسنج</h1>
                         <div class="sub"><i class="far fa-clock"></i> <span id="lastUpdateTime">در انتظار GPS</span></div>
                     </div>
                     <div class="controls">
                         <button class="btn btn-warning" id="unitToggleBtn"><i class="fas fa-exchange-alt"></i> تبدیل</button>
-                        <button class="btn btn-purple" id="pdfBtn"><i class="fas fa-file-pdf"></i> PDF</button>
-                        <button class="btn btn-pink" id="reportBtn"><i class="fas fa-file-alt"></i> گزارش</button>
-                        <button class="btn btn-success" id="csvBtn"><i class="fas fa-file-csv"></i> CSV</button>
-                        <button class="btn" id="jsonBtn"><i class="fas fa-file-code"></i> JSON</button>
+                        <button class="btn btn-purple" id="screenshotBtn"><i class="fas fa-camera"></i> گرفتن عکس</button>
                         <button class="btn btn-danger" id="resetBtn"><i class="fas fa-trash-alt"></i> حذف</button>
                         <button class="btn btn-success" id="startGpsBtn"><i class="fas fa-play"></i> شروع</button>
                     </div>
                 </header>
 
+                <!-- ====== تنظیمات عکس ====== -->
+                <div class="photo-settings">
+                    <label>
+                        <i class="fas fa-expand"></i> کیفیت
+                        <input type="range" id="qualityRange" min="1" max="3" step="0.5" value="2" />
+                        <span id="qualityLabel">2x</span>
+                    </label>
+                    <label>
+                        <i class="fas fa-palette"></i> تم
+                        <select id="themeSelect">
+                            <option value="dark">تاریک (مخصوص فیلم)</option>
+                            <option value="light">روشن</option>
+                            <option value="transparent">شفاف (PNG)</option>
+                        </select>
+                    </label>
+                    <label>
+                        <i class="fas fa-arrows-alt"></i> اندازه
+                        <select id="sizeSelect">
+                            <option value="full">کامل</option>
+                            <option value="speed">فقط سرعت</option>
+                            <option value="compact">فشرده</option>
+                        </select>
+                    </label>
+                    <label style="color:#60a5fa;">
+                        <i class="fas fa-info-circle"></i> برای اوورلی فیلم، تم "تاریک" و کیفیت ۲x انتخاب کنید
+                    </label>
+                </div>
+
                 <!-- ====== سرعت لحظه‌ای ====== -->
-                <div class="speed-center">
+                <div class="speed-center" id="speedCenter">
                     <div class="gps-status" id="gpsStatus"><i class="fas fa-circle" style="color: #ef4444; font-size: 8px;"></i> غیرفعال</div>
                     <div class="label"><i class="fas fa-gauge-high" style="margin-left: 5px;"></i>سرعت لحظه‌ای</div>
                     <div class="value-wrapper">
@@ -548,7 +633,7 @@
                 </div>
 
                 <!-- ====== پارامترها ====== -->
-                <div class="params-grid">
+                <div class="params-grid" id="paramsGrid">
                     <div class="param-item">
                         <div class="icon"><i class="fas fa-bolt"></i></div>
                         <div class="plabel">بیشینه سرعت</div>
@@ -624,7 +709,7 @@
 
                 <!-- ====== فوتر ====== -->
                 <div class="footer">
-                    <span><i class="fas fa-copyright"></i> ۱۴۰۶ – کیلومترسنج حرفه‌ای v4.0</span>
+                    <span><i class="fas fa-copyright"></i> ۱۴۰۶ – کیلومترسنج</span>
                     <span id="footerInfo"><i class="fas fa-circle" style="color: #7a8ba5; font-size: 6px;"></i> GPS: غیرفعال</span>
                     <span id="coordsDisplay"><i class="fas fa-location-dot"></i> -- , --</span>
                     <span id="pointCount"><i class="fas fa-map-pin"></i> ۰ نقطه</span>
@@ -677,7 +762,7 @@
             let pathPolyline = null;
             let carMarker = null;
             let updateInterval = null;
-            let exportData = {};
+            let screenshotDataUrl = null;
 
             // ============================================================
             // DOM
@@ -946,20 +1031,6 @@
                 el.footerInfo.innerHTML = `<i class="fas fa-circle" style="color: #22c55e; font-size: 6px;"></i> GPS: فعال | ${tripData.pathPoints.length} نقطه`;
                 updateUI();
                 updateMap();
-
-                exportData = {
-                    ...tripData,
-                    maxAltitude: tripData.maxAltitude,
-                    minAltitude: tripData.minAltitude,
-                    totalAscent: tripData.totalAscent,
-                    totalDescent: tripData.totalDescent,
-                    maxAcceleration: tripData.maxAcceleration,
-                    maxDeceleration: tripData.maxDeceleration,
-                    movingTime: tripData.movingTime,
-                    stoppedTime: tripData.stoppedTime,
-                    exportTime: new Date().toISOString(),
-                    unit: isKmUnit ? 'km' : 'miles',
-                };
             }
 
             // ============================================================
@@ -1059,10 +1130,10 @@
                 el.footerInfo.innerHTML = '<i class="fas fa-circle" style="color: #7a8ba5; font-size: 6px;"></i> GPS: غیرفعال';
                 el.lastUpdateTime.textContent = 'در انتظار GPS';
                 el.pointCount.textContent = '۰ نقطه';
-                exportData = {};
                 updateUI();
                 document.getElementById('startGpsBtn').innerHTML = '<i class="fas fa-play"></i> شروع';
                 isGpsRunning = false;
+                screenshotDataUrl = null;
             }
 
             // ============================================================
@@ -1076,244 +1147,140 @@
             }
 
             // ============================================================
-            // 1. خروجی PDF
+            // گرفتن اسکرین‌شات با تنظیمات
             // ============================================================
-            function exportPDF() {
+            function takeScreenshot() {
                 if (tripData.pathPoints.length < 2) {
-                    alert('هنوز داده‌ای برای خروجی وجود ندارد.');
+                    alert('هنوز داده‌ای برای عکس گرفتن وجود ندارد. لطفاً GPS را شروع کنید و کمی حرکت کنید.');
                     return;
                 }
 
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF('p', 'mm', 'a4');
-                const pageWidth = 210;
-                const pageHeight = 297;
-                let y = 20;
+                const quality = parseFloat(document.getElementById('qualityRange').value);
+                const theme = document.getElementById('themeSelect').value;
+                const size = document.getElementById('sizeSelect').value;
 
-                // Header
-                doc.setFillColor(19, 30, 47);
-                doc.rect(0, 0, pageWidth, 40, 'F');
-                doc.setTextColor(96, 165, 250);
-                doc.setFontSize(22);
-                doc.text('گزارش سفر', pageWidth / 2, 25, { align: 'center' });
+                const btn = document.getElementById('screenshotBtn');
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال ساخت...';
+                btn.disabled = true;
 
-                y = 50;
+                let element = document.getElementById('dashboardCapture');
 
-                // اطلاعات اصلی
-                doc.setTextColor(200, 200, 200);
-                doc.setFontSize(12);
-                const info = [
-                    ['تاریخ خروجی', new Date().toLocaleString('fa-IR')],
-                    ['واحد', isKmUnit ? 'کیلومتر' : 'مایل'],
-                    ['تعداد نقاط', tripData.pathPoints.length],
-                ];
-                info.forEach(item => {
-                    doc.text(`${item[0]}: ${item[1]}`, 20, y);
-                    y += 8;
+                // اعمال تم
+                if (theme === 'transparent') {
+                    document.querySelector('.dashboard').style.background = 'transparent';
+                    document.querySelector('.dashboard').style.border = 'none';
+                    document.querySelector('.dashboard').style.boxShadow = 'none';
+                } else if (theme === 'light') {
+                    document.querySelector('.dashboard').style.background = '#f0f4f8';
+                    document.querySelector('.dashboard').style.color = '#1e293b';
+                    document.querySelector('.dashboard').style.borderColor = '#cbd5e1';
+                } else {
+                    document.querySelector('.dashboard').style.background = '#131e2f';
+                    document.querySelector('.dashboard').style.border = '1px solid #2a3a52';
+                    document.querySelector('.dashboard').style.boxShadow = '0 20px 50px rgba(0, 0, 0, 0.7)';
+                }
+
+                // مخفی کردن نقشه در حالت speed
+                if (size === 'speed') {
+                    document.querySelector('.map-section').style.display = 'none';
+                    document.getElementById('paramsGrid').style.display = 'none';
+                } else if (size === 'compact') {
+                    document.querySelector('.map-section').style.display = 'none';
+                    document.getElementById('paramsGrid').style.gridTemplateColumns = 'repeat(4, 1fr)';
+                } else {
+                    document.querySelector('.map-section').style.display = 'block';
+                    document.getElementById('paramsGrid').style.gridTemplateColumns = 'repeat(6, 1fr)';
+                }
+
+                const scale = quality;
+
+                html2canvas(element, {
+                    scale: scale,
+                    backgroundColor: theme === 'transparent' ? null : (theme === 'light' ? '#f0f4f8' : '#0b1120'),
+                    allowTaint: true,
+                    useCORS: true,
+                    logging: false,
+                    width: element.scrollWidth,
+                    height: element.scrollHeight,
+                    windowWidth: element.scrollWidth,
+                    windowHeight: element.scrollHeight,
+                    onclone: function(clonedDoc) {
+                        // تنظیمات اضافی برای کلون
+                    }
+                }).then(canvas => {
+                    // بازگرداندن تنظیمات
+                    document.querySelector('.dashboard').style.background = '#131e2f';
+                    document.querySelector('.dashboard').style.border = '1px solid #2a3a52';
+                    document.querySelector('.dashboard').style.boxShadow = '0 20px 50px rgba(0, 0, 0, 0.7)';
+                    document.querySelector('.map-section').style.display = 'block';
+                    document.getElementById('paramsGrid').style.gridTemplateColumns = 'repeat(6, 1fr)';
+                    document.getElementById('paramsGrid').style.display = 'grid';
+
+                    screenshotDataUrl = canvas.toDataURL('image/png');
+
+                    const modal = document.getElementById('screenshotModal');
+                    const img = document.getElementById('screenshotImage');
+                    img.src = screenshotDataUrl;
+                    modal.classList.add('show');
+
+                    btn.innerHTML = originalHtml;
+                    btn.disabled = false;
+                }).catch(err => {
+                    console.error('خطا در ساخت عکس:', err);
+                    alert('خطا در ساخت عکس: ' + err.message);
+                    document.querySelector('.dashboard').style.background = '#131e2f';
+                    document.querySelector('.dashboard').style.border = '1px solid #2a3a52';
+                    document.querySelector('.dashboard').style.boxShadow = '0 20px 50px rgba(0, 0, 0, 0.7)';
+                    document.querySelector('.map-section').style.display = 'block';
+                    document.getElementById('paramsGrid').style.gridTemplateColumns = 'repeat(6, 1fr)';
+                    document.getElementById('paramsGrid').style.display = 'grid';
+                    btn.innerHTML = originalHtml;
+                    btn.disabled = false;
                 });
-
-                y += 5;
-                doc.setDrawColor(42, 58, 82);
-                doc.line(20, y, 190, y);
-                y += 10;
-
-                // آمار اصلی
-                const stats = [
-                    ['بیشینه سرعت', `${speedDisplay(tripData.maxSpeed)} ${unitLabel()}`],
-                    ['میانگین سرعت', `${speedDisplay(tripData.avgSpeed)} ${unitLabel()}`],
-                    ['مسافت طی شده', `${distanceDisplay(tripData.distance)} ${distUnit()}`],
-                    ['مدت رانندگی', formatDuration(tripData.duration)],
-                    ['چرخش به چپ', tripData.leftTurns],
-                    ['چرخش به راست', tripData.rightTurns],
-                    ['ارتفاع فعلی', `${tripData.pathPoints[tripData.pathPoints.length-1]?.altitude?.toFixed(1) || 0} m`],
-                    ['بیشینه ارتفاع', `${tripData.maxAltitude.toFixed(1)} m`],
-                    ['صعود کلی', `${tripData.totalAscent.toFixed(1)} m`],
-                    ['نزول کلی', `${tripData.totalDescent.toFixed(1)} m`],
-                    ['بیشینه شتاب', `${tripData.maxAcceleration.toFixed(2)} m/s²`],
-                    ['بیشینه ترمز', `${tripData.maxDeceleration.toFixed(2)} m/s²`],
-                    ['زمان حرکت', formatDuration(tripData.movingTime)],
-                    ['زمان توقف', formatDuration(tripData.stoppedTime)],
-                ];
-
-                doc.setTextColor(230, 237, 245);
-                doc.setFontSize(11);
-                let col1 = 20,
-                    col2 = 110;
-                stats.forEach((item, index) => {
-                    const x = index < 7 ? col1 : col2;
-                    const yPos = y + ((index % 7) * 8);
-                    if (index === 7) y = yPos;
-                    doc.text(`${item[0]}: ${item[1]}`, x, yPos);
-                });
-
-                y += 60;
-
-                // مختصات شروع و پایان
-                const first = tripData.pathPoints[0];
-                const last = tripData.pathPoints[tripData.pathPoints.length - 1];
-                doc.setTextColor(150, 160, 180);
-                doc.setFontSize(10);
-                doc.text(`📍 شروع: ${first.lat.toFixed(5)}, ${first.lng.toFixed(5)}`, 20, y);
-                y += 7;
-                doc.text(`📍 پایان: ${last.lat.toFixed(5)}, ${last.lng.toFixed(5)}`, 20, y);
-
-                // Footer
-                doc.setFontSize(8);
-                doc.setTextColor(100, 100, 120);
-                doc.text('تولید شده توسط کیلومترسنج حرفه‌ای v4.0', pageWidth / 2, pageHeight - 15, { align: 'center' });
-
-                doc.save(`trip_report_${new Date().toISOString().slice(0,10)}.pdf`);
             }
 
             // ============================================================
-            // 2. خروجی گزارش HTML
+            // دانلود عکس
             // ============================================================
-            function exportReport() {
-                if (tripData.pathPoints.length < 2) {
-                    alert('هنوز داده‌ای برای خروجی وجود ندارد.');
+            function downloadPng() {
+                if (!screenshotDataUrl) {
+                    alert('ابتدا عکس را بگیرید.');
                     return;
                 }
-
-                const first = tripData.pathPoints[0];
-                const last = tripData.pathPoints[tripData.pathPoints.length - 1];
-
-                const html = `
-                    <!DOCTYPE html>
-                    <html dir="rtl">
-                    <head>
-                        <meta charset="UTF-8">
-                        <title>گزارش سفر</title>
-                        <style>
-                            body { font-family: 'Vazir', Tahoma, sans-serif; background: #0b1120; color: #e8edf5; padding: 40px; }
-                            .container { max-width: 800px; margin: auto; background: #131e2f; padding: 30px; border-radius: 20px; border: 1px solid #2a3a52; }
-                            h1 { color: #60a5fa; text-align: center; }
-                            .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
-                            .item { background: #0f1928; padding: 10px 15px; border-radius: 12px; border: 1px solid #1e3146; }
-                            .label { color: #7a8ba5; font-size: 12px; }
-                            .value { font-size: 18px; font-weight: bold; margin-top: 4px; }
-                            .map-placeholder { background: #0b1320; height: 200px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #4a5a72; border: 1px solid #1e3146; margin: 20px 0; }
-                            .footer { text-align: center; color: #4a5a72; font-size: 12px; margin-top: 30px; border-top: 1px solid #1e3146; padding-top: 20px; }
-                            .highlight { color: #60a5fa; }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="container">
-                            <h1>📊 گزارش سفر</h1>
-                            <p style="text-align:center;color:#7a8ba5;">تاریخ: ${new Date().toLocaleString('fa-IR')}</p>
-                            <div class="grid">
-                                <div class="item"><div class="label">بیشینه سرعت</div><div class="value">${speedDisplay(tripData.maxSpeed)} ${unitLabel()}</div></div>
-                                <div class="item"><div class="label">میانگین سرعت</div><div class="value">${speedDisplay(tripData.avgSpeed)} ${unitLabel()}</div></div>
-                                <div class="item"><div class="label">مسافت طی شده</div><div class="value">${distanceDisplay(tripData.distance)} ${distUnit()}</div></div>
-                                <div class="item"><div class="label">مدت رانندگی</div><div class="value">${formatDuration(tripData.duration)}</div></div>
-                                <div class="item"><div class="label">چرخش به چپ</div><div class="value">${tripData.leftTurns}</div></div>
-                                <div class="item"><div class="label">چرخش به راست</div><div class="value">${tripData.rightTurns}</div></div>
-                                <div class="item"><div class="label">بیشینه ارتفاع</div><div class="value">${tripData.maxAltitude.toFixed(1)} m</div></div>
-                                <div class="item"><div class="label">صعود/نزول</div><div class="value">↑${tripData.totalAscent.toFixed(1)} / ↓${tripData.totalDescent.toFixed(1)} m</div></div>
-                                <div class="item"><div class="label">زمان حرکت</div><div class="value">${formatDuration(tripData.movingTime)}</div></div>
-                                <div class="item"><div class="label">زمان توقف</div><div class="value">${formatDuration(tripData.stoppedTime)}</div></div>
-                            </div>
-                            <div class="map-placeholder">
-                                <div>
-                                    <div>📍 مسیر پیموده شده</div>
-                                    <div style="font-size:12px;color:#4a5a72;">${tripData.pathPoints.length} نقطه</div>
-                                    <div style="font-size:12px;color:#4a5a72;">شروع: ${first.lat.toFixed(5)}, ${first.lng.toFixed(5)}</div>
-                                    <div style="font-size:12px;color:#4a5a72;">پایان: ${last.lat.toFixed(5)}, ${last.lng.toFixed(5)}</div>
-                                </div>
-                            </div>
-                            <div class="footer">
-                                تولید شده توسط کیلومترسنج حرفه‌ای v4.0
-                            </div>
-                        </div>
-                    </body>
-                    </html>
-                `;
-
-                const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `trip_report_${new Date().toISOString().slice(0,10)}.html`;
-                a.click();
-                URL.revokeObjectURL(url);
+                const link = document.createElement('a');
+                link.download = `trip_overlay_${new Date().toISOString().slice(0,10)}.png`;
+                link.href = screenshotDataUrl;
+                link.click();
             }
 
-            // ============================================================
-            // 3. خروجی CSV
-            // ============================================================
-            function exportCSV() {
-                if (tripData.pathPoints.length < 2) {
-                    alert('هنوز داده‌ای برای خروجی وجود ندارد.');
+            function downloadJpg() {
+                if (!screenshotDataUrl) {
+                    alert('ابتدا عکس را بگیرید.');
                     return;
                 }
-
-                let csv = 'نقطه,عرض جغرافیایی,طول جغرافیایی,ارتفاع(m),جهت(°),سرعت(km/h)\n';
-                tripData.pathPoints.forEach((p, i) => {
-                    csv +=
-                        `${i+1},${p.lat.toFixed(6)},${p.lng.toFixed(6)},${(p.altitude||0).toFixed(1)},${(p.heading||0).toFixed(1)},${(p.speed||0).toFixed(1)}\n`;
-                });
-
-                // اضافه کردن خلاصه
-                csv += '\n--- خلاصه سفر ---\n';
-                csv += `بیشینه سرعت,${tripData.maxSpeed.toFixed(1)}\n`;
-                csv += `میانگین سرعت,${tripData.avgSpeed.toFixed(1)}\n`;
-                csv += `مسافت,${tripData.distance.toFixed(2)}\n`;
-                csv += `مدت,${formatDuration(tripData.duration)}\n`;
-                csv += `چرخش چپ,${tripData.leftTurns}\n`;
-                csv += `چرخش راست,${tripData.rightTurns}\n`;
-
-                const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `trip_data_${new Date().toISOString().slice(0,10)}.csv`;
-                a.click();
-                URL.revokeObjectURL(url);
-            }
-
-            // ============================================================
-            // 4. خروجی JSON
-            // ============================================================
-            function exportJSON() {
-                if (tripData.pathPoints.length < 2) {
-                    alert('هنوز داده‌ای برای خروجی وجود ندارد.');
-                    return;
-                }
-
-                const outputData = {
-                    ...exportData,
-                    pathPoints: tripData.pathPoints.map(p => ({
-                        lat: p.lat,
-                        lng: p.lng,
-                        altitude: p.altitude || 0,
-                        heading: p.heading || 0,
-                        speed: p.speed || 0,
-                    })),
-                    summary: {
-                        maxSpeed: tripData.maxSpeed,
-                        avgSpeed: tripData.avgSpeed,
-                        distance: tripData.distance,
-                        duration: tripData.duration,
-                        leftTurns: tripData.leftTurns,
-                        rightTurns: tripData.rightTurns,
-                        maxAltitude: tripData.maxAltitude,
-                        minAltitude: tripData.minAltitude,
-                        totalAscent: tripData.totalAscent,
-                        totalDescent: tripData.totalDescent,
-                        movingTime: tripData.movingTime,
-                        stoppedTime: tripData.stoppedTime,
-                    },
-                    unit: isKmUnit ? 'km' : 'miles',
-                    exportDate: new Date().toISOString(),
+                // تبدیل به JPG
+                const canvas = document.createElement('canvas');
+                const img = new Image();
+                img.onload = function() {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    const jpgDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+                    const link = document.createElement('a');
+                    link.download = `trip_overlay_${new Date().toISOString().slice(0,10)}.jpg`;
+                    link.href = jpgDataUrl;
+                    link.click();
                 };
+                img.src = screenshotDataUrl;
+            }
 
-                const json = JSON.stringify(outputData, null, 2);
-                const blob = new Blob([json], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `trip_data_${new Date().toISOString().slice(0,10)}.json`;
-                a.click();
-                URL.revokeObjectURL(url);
+            // ============================================================
+            // مودال
+            // ============================================================
+            function closeModal() {
+                document.getElementById('screenshotModal').classList.remove('show');
             }
 
             // ============================================================
@@ -1351,6 +1318,13 @@
             }
 
             // ============================================================
+            // تنظیمات کیفیت
+            // ============================================================
+            document.getElementById('qualityRange').addEventListener('input', function() {
+                document.getElementById('qualityLabel').textContent = this.value + 'x';
+            });
+
+            // ============================================================
             // راه‌اندازی
             // ============================================================
             function init() {
@@ -1359,10 +1333,19 @@
                 document.getElementById('unitToggleBtn').addEventListener('click', toggleUnit);
                 document.getElementById('resetBtn').addEventListener('click', resetTrip);
                 document.getElementById('startGpsBtn').addEventListener('click', startGps);
-                document.getElementById('pdfBtn').addEventListener('click', exportPDF);
-                document.getElementById('reportBtn').addEventListener('click', exportReport);
-                document.getElementById('csvBtn').addEventListener('click', exportCSV);
-                document.getElementById('jsonBtn').addEventListener('click', exportJSON);
+                document.getElementById('screenshotBtn').addEventListener('click', takeScreenshot);
+                document.getElementById('downloadPngBtn').addEventListener('click', downloadPng);
+                document.getElementById('downloadJpgBtn').addEventListener('click', downloadJpg);
+                document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+                document.getElementById('modalCloseBtn2').addEventListener('click', closeModal);
+
+                document.getElementById('screenshotModal').addEventListener('click', function(e) {
+                    if (e.target === this) closeModal();
+                });
+
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') closeModal();
+                });
 
                 updateUI();
             }
@@ -1381,4 +1364,4 @@
     </script>
 
 </body>
-</html>
+    </html>
