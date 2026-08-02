@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>بلک‌جک · کازینو</title>
-    <!-- Font Awesome 6 (رایگان) برای آیکون‌های حرفه‌ای -->
+    <!-- Font Awesome 6 (رایگان) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
@@ -25,7 +25,6 @@
             margin: 0;
         }
 
-        /* کانتینر اصلی با حس کازینو */
         .game-container {
             max-width: 820px;
             width: 100%;
@@ -39,7 +38,6 @@
             transition: all 0.2s;
         }
 
-        /* هدر با طلا و تاج */
         .game-header {
             display: flex;
             align-items: center;
@@ -81,7 +79,6 @@
             font-size: 1.2rem;
         }
 
-        /* میز بازی */
         .table {
             background: #1b2f1f;
             background: radial-gradient(ellipse at center, #1f4029, #0f2618);
@@ -92,7 +89,6 @@
             position: relative;
         }
 
-        /* ناحیه دست‌ها */
         .hand-area {
             background: rgba(8, 20, 10, 0.5);
             backdrop-filter: blur(3px);
@@ -152,7 +148,6 @@
             min-height: 120px;
         }
 
-        /* کارت‌ها با طراحی جدید و طلایی */
         .card {
             background: #fcf9f2;
             width: 80px;
@@ -198,7 +193,6 @@
         }
         .card-back span { display: none; }
 
-        /* کنترل‌ها با حس کازینو */
         .controls {
             display: flex;
             flex-wrap: wrap;
@@ -262,7 +256,6 @@
             border-color: #c95a4a;
         }
 
-        /* پیام با حاشیه طلایی */
         .message-box {
             background: #14100c;
             border-radius: 100px;
@@ -285,6 +278,57 @@
         .message-box i {
             font-size: 1.8rem;
             color: #f5c542;
+        }
+
+        /* کادرهای مجزا برای برد و باخت */
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 18px;
+            padding: 0 8px;
+            flex-wrap: wrap;
+        }
+        .stat-box {
+            background: #14100c;
+            border-radius: 60px;
+            padding: 10px 28px;
+            border: 1px solid #b8944b;
+            box-shadow: inset 0 2px 10px #0a0806, 0 4px 12px rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #f5e5c0;
+            min-width: 140px;
+            justify-content: center;
+        }
+        .stat-box i {
+            font-size: 1.4rem;
+            width: 28px;
+            text-align: center;
+        }
+        .stat-box.win i {
+            color: #f5c542;
+        }
+        .stat-box.lose i {
+            color: #c95a4a;
+        }
+        .stat-box .stat-number {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: #f5e5c0;
+            min-width: 32px;
+            text-align: center;
+        }
+        .stat-box.win .stat-number {
+            color: #f5c542;
+            text-shadow: 0 0 12px #b8860b;
+        }
+        .stat-box.lose .stat-number {
+            color: #e06b5a;
+            text-shadow: 0 0 12px #8b2f2f;
         }
 
         .footer-stats {
@@ -321,13 +365,14 @@
             .game-header h1 { font-size: 2rem; gap: 6px; }
             .game-header .badge-robot { font-size: 0.9rem; padding: 4px 14px; }
             .message-box { font-size: 1rem; padding: 12px 16px; min-height: 60px; }
+            .stat-box { padding: 8px 18px; font-size: 1rem; min-width: 100px; }
+            .stat-box .stat-number { font-size: 1.4rem; }
         }
     </style>
 </head>
 <body>
 <div class="game-container">
 
-    <!-- HEADER با آیکون‌های فونت‌awesome -->
     <div class="game-header">
         <h1>
             <i class="fas fa-crown"></i> بلک‌جک
@@ -369,9 +414,22 @@
             <i class="fas fa-dice"></i> شروع بازی · خوش آمدید
         </div>
 
+        <!-- کادرهای برد و باخت جداگانه -->
+        <div class="stats-container">
+            <div class="stat-box win">
+                <i class="fas fa-trophy"></i>
+                <span>برد:</span>
+                <span class="stat-number" id="winCountDisplay">0</span>
+            </div>
+            <div class="stat-box lose">
+                <i class="fas fa-times-circle"></i>
+                <span>باخت:</span>
+                <span class="stat-number" id="loseCountDisplay">0</span>
+            </div>
+        </div>
+
         <!-- فوتر -->
         <div class="footer-stats">
-            <span><i class="fas fa-trophy"></i> برد/باخت: <span id="winCounter">0</span></span>
             <span><i class="fas fa-bullseye"></i> هدف ۲۱</span>
             <span><i class="fas fa-gem"></i> کازینو</span>
         </div>
@@ -390,13 +448,15 @@
         let gameOver = false;
         let playerStand = false;
         let winCount = 0;
+        let loseCount = 0;
 
         const dealerCardsEl = document.getElementById('dealer-cards');
         const playerCardsEl = document.getElementById('player-cards');
         const dealerScoreBadge = document.getElementById('dealer-score-badge');
         const playerScoreBadge = document.getElementById('player-score-badge');
         const messageDisplay = document.getElementById('messageDisplay');
-        const winCounterSpan = document.getElementById('winCounter');
+        const winCountDisplay = document.getElementById('winCountDisplay');
+        const loseCountDisplay = document.getElementById('loseCountDisplay');
 
         const hitBtn = document.getElementById('hitBtn');
         const standBtn = document.getElementById('standBtn');
@@ -459,9 +519,12 @@
             return `<div class="card ${colorClass}">${card.rank}${card.suit}</div>`;
         }
 
-        // رندر با آیکون‌های font-awesome در پیام و امتیاز
+        function updateStatsUI() {
+            winCountDisplay.textContent = winCount;
+            loseCountDisplay.textContent = loseCount;
+        }
+
         function render(dealerHidden = true) {
-            // رندر دیلر
             let dealerHTML = '';
             if (dealerHand.length === 0) {
                 dealerHTML = '<div style="color: #6b5a44; font-size:0.9rem;">‌</div>';
@@ -473,7 +536,6 @@
             }
             dealerCardsEl.innerHTML = dealerHTML;
 
-            // رندر کاربر
             let playerHTML = '';
             if (playerHand.length === 0) {
                 playerHTML = '<div style="color: #6b5a44; font-size:0.9rem;">‌</div>';
@@ -497,20 +559,17 @@
                 dealerScoreBadge.innerHTML = `<i class="fas fa-star"></i> امتیاز: ${dealerScore}`;
             }
 
-            winCounterSpan.textContent = winCount;
+            updateStatsUI();
             hitBtn.disabled = gameOver || playerStand || playerHand.length === 0;
             standBtn.disabled = gameOver || playerStand || playerHand.length === 0;
         }
 
-        // پیام با آیکون
         function setMessage(msg, isGood = true) {
-            // جدا کردن آیکون از متن اگر داخل msg باشد (برای حفظ انعطاف)
             let icon = 'fa-dice';
             let text = msg;
-            // اگر پیام با آیکون خاصی شروع شد (برای حالت‌های خاص)
-            if (msg.includes('شما باختید') || msg.includes('دیلر برنده')) {
+            if (msg.includes('باخت') || msg.includes('دیلر برنده')) {
                 icon = 'fa-times-circle';
-            } else if (msg.includes('برنده شدید') || msg.includes('بلک‌جک')) {
+            } else if (msg.includes('برنده') || msg.includes('بلک‌جک')) {
                 icon = 'fa-trophy';
             } else if (msg.includes('مساوی')) {
                 icon = 'fa-handshake';
@@ -532,6 +591,7 @@
 
             if (playerScore > 21) {
                 setMessage('شما باختید! (بیش از ۲۱)', false);
+                loseCount++;
                 return 'dealer';
             }
             if (dealerScore > 21) {
@@ -546,6 +606,7 @@
                     return 'player';
                 } else if (playerScore < dealerScore) {
                     setMessage('دیلر برنده شد!', false);
+                    loseCount++;
                     return 'dealer';
                 } else {
                     setMessage('مساوی! (PUSH)', false);
@@ -567,6 +628,7 @@
                     winCount++;
                 } else if (dScore === 21 && pScore !== 21) {
                     setMessage('دیلر بلک‌جک دارد.', false);
+                    loseCount++;
                 } else {
                     checkWinner();
                 }
@@ -617,6 +679,7 @@
             } else if (dealerScore === 21) {
                 render(false);
                 setMessage('دیلر بلک‌جک دارد. شما باختید.');
+                loseCount++;
                 gameOver = true;
                 return;
             }
@@ -625,7 +688,7 @@
             playerStand = false;
             render(true);
             setMessage('بازی شروع شد. بزنید یا بس کنید.');
-            winCounterSpan.textContent = winCount;
+            updateStatsUI();
         }
 
         function playerHit() {
@@ -637,8 +700,10 @@
             if (score > 21) {
                 render(false);
                 setMessage('بیش از ۲۱! شما باختید.', false);
+                loseCount++;
                 gameOver = true;
                 dealerScoreBadge.innerHTML = `<i class="fas fa-star"></i> امتیاز: ${calculateScore(dealerHand)}`;
+                updateStatsUI();
                 return;
             }
 
@@ -668,7 +733,8 @@
             gameOver = false;
             playerStand = false;
             winCount = 0;
-            winCounterSpan.textContent = '0';
+            loseCount = 0;
+            updateStatsUI();
 
             for (let i = 0; i < 2; i++) {
                 playerHand.push(drawCard());
@@ -689,12 +755,13 @@
             } else if (dScore === 21) {
                 render(false);
                 setMessage('دیلر بلک‌جک دارد. باختید.');
+                loseCount++;
                 gameOver = true;
             } else {
                 render(true);
                 setMessage('شروع بازی · خوش آمدید');
             }
-            winCounterSpan.textContent = winCount;
+            updateStatsUI();
 
             hitBtn.addEventListener('click', playerHit);
             standBtn.addEventListener('click', playerStandAction);
