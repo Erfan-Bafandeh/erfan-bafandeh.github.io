@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>کیلومترسنج | سرعت لحظه‌ای</title>
+    <!-- Leaflet for map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- Google Font (Vazir) -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazir:wght@300;400;700;900&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazir', sans-serif;
+            background: #0b1120;
+            color: #e8edf5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .dashboard {
+            max-width: 1100px;
+            width: 100%;
+            background: #131e2f;
+            border-radius: 48px;
+            padding: 28px 30px 40px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+            border: 1px solid #2a3a52;
+        }
+
+        /* ---------- هدر ---------- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-weight: 900;
+            font-size: 24px;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header .sub {
+            font-size: 13px;
+            color: #7a8ba5;
+            margin-top: 2px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #1f3146;
+            border: none;
+            padding: 9px 16px;
+            border-radius: 40px;
+            font-family: 'Vazir', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            color: #e8edf5;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.25s;
+            border: 1px solid #2f405a;
+        }
+
+        .btn i {
+            font-size: 15px;
+        }
+
+        .btn:hover {
+            background: #2a3f5a;
+            transform: translateY(-2px);
+            border-color: #4b6a8f;
+        }
+
+        .btn-danger {
+            background: #4a1e2a;
+            border-color: #712b3b;
+            color: #fca5a5;
+        }
+
+        .btn-danger:hover {
+            background: #6d263a;
+            border-color: #a03a4f;
+        }
+
+        /* ============================================================
+                   بخش اصلی: سرعت لحظه‌ای در وسط
+                   ============================================================ */
+        .speed-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 28px 10px 34px;
+            background: #0f1928;
+            border-radius: 48px;
+            border: 1px solid #25364d;
+            margin-bottom: 30px;
+            min-height: 300px;
+            position: relative;
+        }
+
+        .speed-center .label {
+            font-size: 18px;
+            font-weight: 400;
+            color: #8da0bb;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .speed-center .value-wrapper {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .speed-center .big-speed {
+            font-size: 110px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f0f4ff, #93bbfc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            letter-spacing: 4px;
+            transition: 0.15s;
+        }
+
+        .speed-center .unit {
+            font-size: 32px;
+            font-weight: 700;
+            color: #7a8ba5;
+            margin-right: 4px;
+        }
+
+        .speed-center .status {
+            margin-top: 14px;
+            font-size: 18px;
+            color: #7a8ba5;
+            background: #1a283e;
+            padding: 6px 24px;
+            border-radius: 60px;
+            border: 1px solid #2f405a;
+        }
+
+        .speed-center .status i {
+            margin-left: 8px;
+        }
+
+        /* ============================================================
+                   جزئیات ریز (پایین صفحه)
+                   ============================================================ */
+        .details-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        .detail-card {
+            background: #0f1928;
+            border-radius: 28px;
+            padding: 16px 14px;
+            border: 1px solid #1e3146;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .detail-card:hover {
+            border-color: #3a5680;
+        }
+
+        .detail-card .icon {
+            font-size: 20px;
+            color: #60a5fa;
+            margin-bottom: 4px;
+        }
+
+        .detail-card .dlabel {
+            font-size: 12px;
+            color: #7a8ba5;
+            font-weight: 400;
+        }
+
+        .detail-card .dvalue {
+            font-size: 22px;
+            font-weight: 700;
+            color: #e8edf5;
+            margin-top: 2px;
+        }
+
+        .detail-card .dvalue small {
+            font-size: 13px;
+            font-weight: 400;
+            color: #7a8ba5;
+            margin-right: 3px;
+        }
+
+        /* جزئیات تکمیلی (ردیف دوم) */
+        .extra-details {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 32px;
+        }
+
+        .extra-detail-item {
+            background: #0f1928;
+            border-radius: 28px;
+            padding: 14px 12px;
+            border: 1px solid #1e3146;
+            text-align: center;
+        }
+
+        .extra-detail-item .icon {
+            font-size: 18px;
+            color: #a78bfa;
+        }
+
+        .extra-detail-item .dlabel {
+            font-size: 12px;
+            color: #7a8ba5;
+        }
+
+        .extra-detail-item .dvalue {
+            font-size: 20px;
+            font-weight: 700;
+            color: #e8edf5;
+        }
+
+        .extra-detail-item .dvalue small {
+            font-size: 13px;
+            color: #7a8ba5;
+            font-weight: 400;
+        }
+
+        /* ============================================================
+                   نقشه (پس از اسکرول)
+                   ============================================================ */
+        .map-wrapper {
+            margin-top: 10px;
+            border-radius: 36px;
+            overflow: hidden;
+            border: 1px solid #25364d;
+            background: #0f1928;
+            padding: 6px;
+        }
+
+        #tripMap {
+            width: 100%;
+            height: 380px;
+            border-radius: 32px;
+            background: #0b1320;
+        }
+
+        /* ============================================================
+                   ریسپانسیو
+                   ============================================================ */
+        @media screen and (max-width: 800px) {
+            .details-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .extra-details {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .speed-center .big-speed {
+                font-size: 80px;
+            }
+        }
+
+        @media screen and (max-width: 500px) {
+            .dashboard {
+                padding: 16px;
+            }
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .controls {
+                justify-content: flex-start;
+            }
+            .speed-center .big-speed {
+                font-size: 58px;
+            }
+            .speed-center .unit {
+                font-size: 24px;
+            }
+            .details-section {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .extra-details {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            #tripMap {
+                height: 260px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+
+        <!-- ====== HEADER ====== -->
+        <header class="header">
+            <div>
+                <h1><i class="fas fa-tachometer-alt" style="margin-left: 10px; color: #60a5fa;"></i> کیلومترسنج</h1>
+                <div class="sub"><i class="far fa-clock"></i> بروزرسانی لحظه‌ای</div>
+            </div>
+            <div class="controls">
+                <button class="btn" id="unitToggleBtn"><i class="fas fa-exchange-alt"></i> تبدیل واحد</button>
+                <button class="btn btn-danger" id="resetBtn"><i class="fas fa-trash-alt"></i> حذف داده‌ها</button>
+            </div>
+        </header>
+
+        <!-- ==========================================================
+        بخش مرکزی: سرعت لحظه‌ای
+        ========================================================== -->
+        <div class="speed-center">
+            <div class="label"><i class="fas fa-gauge-high" style="margin-left: 8px;"></i>سرعت لحظه‌ای</div>
+            <div class="value-wrapper">
+                <span class="big-speed" id="instantSpeedBig">۰</span>
+                <span class="unit" id="unitLabel">km/h</span>
+            </div>
+            <div class="status" id="speedStatus"><i class="fas fa-circle" style="color: #22c55e; font-size: 12px;"></i> در حال حرکت</div>
+        </div>
+
+        <!-- ==========================================================
+        جزئیات ریز (ردیف اول)
+        ========================================================== -->
+        <div class="details-section">
+            <div class="detail-card">
+                <div class="icon"><i class="fas fa-bolt"></i></div>
+                <div class="dlabel">بالاترین سرعت</div>
+                <div class="dvalue" id="maxSpeedDisplay">۰ <small>km/h</small></div>
+            </div>
+            <div class="detail-card">
+                <div class="icon"><i class="fas fa-chart-line"></i></div>
+                <div class="dlabel">میانگین سرعت</div>
+                <div class="dvalue" id="avgSpeedDisplay">۰ <small>km/h</small></div>
+            </div>
+            <div class="detail-card">
+                <div class="icon"><i class="fas fa-road"></i></div>
+                <div class="dlabel">مسافت طی شده</div>
+                <div class="dvalue" id="distanceDisplay">۰ <small>km</small></div>
+            </div>
+            <div class="detail-card">
+                <div class="icon"><i class="fas fa-clock"></i></div>
+                <div class="dlabel">مدت رانندگی</div>
+                <div class="dvalue" id="durationDisplay">۰۰:۰۰:۰۰</div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        جزئیات ریز (ردیف دوم: چرخش‌ها + اطلاعات تکمیلی)
+        ========================================================== -->
+        <div class="extra-details">
+            <div class="extra-detail-item">
+                <div class="icon"><i class="fas fa-arrow-left"></i></div>
+                <div class="dlabel">چرخش به چپ</div>
+                <div class="dvalue" id="leftTurnsDisplay">۰</div>
+            </div>
+            <div class="extra-detail-item">
+                <div class="icon"><i class="fas fa-arrow-right"></i></div>
+                <div class="dlabel">چرخش به راست</div>
+                <div class="dvalue" id="rightTurnsDisplay">۰</div>
+            </div>
+            <div class="extra-detail-item">
+                <div class="icon"><i class="fas fa-tachometer-alt"></i></div>
+                <div class="dlabel">سرعت لحظه‌ای</div>
+                <div class="dvalue" id="instantDetailSpeed">۰ <small>km/h</small></div>
+            </div>
+            <div class="extra-detail-item">
+                <div class="icon"><i class="fas fa-flag-checkered"></i></div>
+                <div class="dlabel">وضعیت سفر</div>
+                <div class="dvalue" id="tripStatusDisplay" style="font-size: 16px;">در حرکت</div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        نقشه (پس از اسکرول)
+        ========================================================== -->
+        <div class="map-wrapper">
+            <div id="tripMap"></div>
+        </div>
+
+        <!-- فوتر کوچک -->
+        <div style="margin-top: 20px; display: flex; justify-content: space-between; font-size: 12px; color: #4a5a72; border-top: 1px solid #1e3146; padding-top: 16px;">
+            <span>© ۱۴۰۶ – کیلومترسنج هوشمند</span>
+            <span><i class="fas fa-circle" style="color: #22c55e; font-size: 8px;"></i> سیگنال فعال</span>
+        </div>
+
+    </div>
+
+    <script>
+        (function() {
+            // -------------------- داده‌ها --------------------
+            let tripData = {
+                maxSpeed: 0,
+                avgSpeed: 0,
+                instantSpeed: 0,
+                distance: 0,
+                duration: 0,
+                leftTurns: 0,
+                rightTurns: 0,
+                pathPoints: []
+            };
+
+            let isKmUnit = true;
+            let isDriving = true;
+            let intervalId = null;
+            let currentPos = { lat: 35.6892, lng: 51.3890 };
+
+            // -------------------- نقشه --------------------
+            const map = L.map('tripMap', {
+                center: [35.6892, 51.3890],
+                zoom: 13,
+                zoomControl: true,
+            });
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap, CartoDB',
+                subdomains: 'abcd',
+                maxZoom: 19
+            }).addTo(map);
+
+            const pathPolyline = L.polyline([], {
+                color: '#60a5fa',
+                weight: 4,
+                opacity: 0.85,
+                smoothFactor: 1
+            }).addTo(map);
+
+            const carIcon = L.divIcon({
+                html: '<i class="fas fa-car" style="font-size: 30px; color: #60a5fa; filter: drop-shadow(0 0 8px #3b82f6);"></i>',
+                className: '',
+                iconSize: [32, 32],
+                iconAnchor: [16, 16]
+            });
+            let carMarker = L.marker([35.6892, 51.3890], { icon: carIcon }).addTo(map);
+
+            // -------------------- توابع کمکی --------------------
+            function formatDuration(sec) {
+                const h = Math.floor(sec / 3600);
+                const m = Math.floor((sec % 3600) / 60);
+                const s = Math.floor(sec % 60);
+                return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            }
+
+            function speedDisplay(kmh) {
+                if (isKmUnit) return `${kmh.toFixed(1)}`;
+                const mph = kmh * 0.621371;
+                return `${mph.toFixed(1)}`;
+            }
+
+            function unitLabel() {
+                return isKmUnit ? 'km/h' : 'mph';
+            }
+
+            function distanceDisplay(km) {
+                if (isKmUnit) return `${km.toFixed(2)}`;
+                const miles = km * 0.621371;
+                return `${miles.toFixed(2)}`;
+            }
+
+            function distUnit() {
+                return isKmUnit ? 'km' : 'mi';
+            }
+
+            // -------------------- بروزرسانی UI --------------------
+            function updateUI() {
+                // سرعت لحظه‌ای بزرگ در وسط
+                document.getElementById('instantSpeedBig').textContent = speedDisplay(tripData.instantSpeed);
+                document.getElementById('unitLabel').textContent = unitLabel();
+
+                // جزئیات ریز
+                document.getElementById('maxSpeedDisplay').innerHTML =
+                    `${speedDisplay(tripData.maxSpeed)} <small>${unitLabel()}</small>`;
+                document.getElementById('avgSpeedDisplay').innerHTML =
+                    `${speedDisplay(tripData.avgSpeed)} <small>${unitLabel()}</small>`;
+                document.getElementById('distanceDisplay').innerHTML =
+                    `${distanceDisplay(tripData.distance)} <small>${distUnit()}</small>`;
+                document.getElementById('durationDisplay').textContent = formatDuration(tripData.duration);
+
+                document.getElementById('leftTurnsDisplay').textContent = tripData.leftTurns;
+                document.getElementById('rightTurnsDisplay').textContent = tripData.rightTurns;
+                document.getElementById('instantDetailSpeed').innerHTML =
+                    `${speedDisplay(tripData.instantSpeed)} <small>${unitLabel()}</small>`;
+
+                // وضعیت
+                const statusEl = document.getElementById('speedStatus');
+                const tripStatusEl = document.getElementById('tripStatusDisplay');
+                if (tripData.instantSpeed < 0.5) {
+                    statusEl.innerHTML = '<i class="fas fa-circle" style="color: #ef4444; font-size: 12px;"></i> متوقف';
+                    tripStatusEl.textContent = '🛑 متوقف';
+                } else if (tripData.instantSpeed < 30) {
+                    statusEl.innerHTML = '<i class="fas fa-circle" style="color: #22c55e; font-size: 12px;"></i> حرکت آرام';
+                    tripStatusEl.textContent = '🚗 حرکت آرام';
+                } else if (tripData.instantSpeed < 70) {
+                    statusEl.innerHTML = '<i class="fas fa-circle" style="color: #facc15; font-size: 12px;"></i> حرکت عادی';
+                    tripStatusEl.textContent = '🚙 حرکت عادی';
+                } else {
+                    statusEl.innerHTML = '<i class="fas fa-circle" style="color: #f97316; font-size: 12px;"></i> سرعت بالا';
+                    tripStatusEl.textContent = '🏎️ سرعت بالا';
+                }
+            }
+
+            function updateMap() {
+                if (tripData.pathPoints.length < 1) return;
+                const latlngs = tripData.pathPoints.map(p => [p.lat, p.lng]);
+                pathPolyline.setLatLngs(latlngs);
+                const last = tripData.pathPoints[tripData.pathPoints.length - 1];
+                carMarker.setLatLng([last.lat, last.lng]);
+                map.panTo([last.lat, last.lng], { animate: true, duration: 0.3 });
+            }
+
+            // -------------------- شبیه‌سازی حرکت --------------------
+            function generateRandomPoint(centerLat, centerLng, radiusKm) {
+                const radiusDeg = radiusKm / 111;
+                const angle = Math.random() * 2 * Math.PI;
+                const lat = centerLat + radiusDeg * Math.sin(angle) * (0.8 + Math.random() * 0.4);
+                const lng = centerLng + radiusDeg * Math.cos(angle) * (0.8 + Math.random() * 0.4);
+                return { lat, lng };
+            }
+
+            function simulateStep() {
+                if (!isDriving) return;
+
+                const newPos = generateRandomPoint(currentPos.lat, currentPos.lng, 0.008);
+                const deltaLat = newPos.lat - currentPos.lat;
+                const deltaLng = newPos.lng - currentPos.lng;
+                const distKm = Math.sqrt(deltaLat * deltaLat + deltaLng * deltaLng) * 111;
+
+                const newSpeed = 15 + Math.random() * 100;
+                tripData.instantSpeed = newSpeed;
+                if (newSpeed > tripData.maxSpeed) tripData.maxSpeed = newSpeed;
+                tripData.distance += distKm;
+                tripData.duration += 1;
+
+                // تشخیص چرخش
+                if (tripData.pathPoints.length > 2) {
+                    const prev = tripData.pathPoints[tripData.pathPoints.length - 2];
+                    const last = tripData.pathPoints[tripData.pathPoints.length - 1];
+                    const dx1 = last.lng - prev.lng;
+                    const dy1 = last.lat - prev.lat;
+                    const dx2 = newPos.lng - last.lng;
+                    const dy2 = newPos.lat - last.lat;
+                    const cross = dx1 * dy2 - dy1 * dx2;
+                    if (Math.abs(cross) > 0.00005) {
+                        if (cross > 0) tripData.rightTurns += 1;
+                        else tripData.leftTurns += 1;
+                    }
+                }
+
+                // میانگین
+                const totalSeconds = tripData.duration;
+                if (totalSeconds > 1) {
+                    tripData.avgSpeed = (tripData.avgSpeed * (totalSeconds - 1) + newSpeed) / totalSeconds;
+                } else {
+                    tripData.avgSpeed = newSpeed;
+                }
+
+                tripData.pathPoints.push(newPos);
+                currentPos = newPos;
+                if (tripData.pathPoints.length > 300) {
+                    tripData.pathPoints = tripData.pathPoints.slice(-200);
+                }
+
+                updateUI();
+                updateMap();
+            }
+
+            // -------------------- ریست --------------------
+            function resetTrip() {
+                if (intervalId) {
+                    clearInterval(intervalId);
+                    intervalId = null;
+                }
+
+                tripData = {
+                    maxSpeed: 0,
+                    avgSpeed: 0,
+                    instantSpeed: 0,
+                    distance: 0,
+                    duration: 0,
+                    leftTurns: 0,
+                    rightTurns: 0,
+                    pathPoints: []
+                };
+                currentPos = { lat: 35.6892, lng: 51.3890 };
+
+                pathPolyline.setLatLngs([]);
+                carMarker.setLatLng([35.6892, 51.3890]);
+                map.panTo([35.6892, 51.3890]);
+
+                updateUI();
+
+                isDriving = true;
+                intervalId = setInterval(simulateStep, 1000);
+            }
+
+            // -------------------- تبدیل واحد --------------------
+            function toggleUnit() {
+                isKmUnit = !isKmUnit;
+                const btn = document.getElementById('unitToggleBtn');
+                btn.innerHTML = `<i class="fas fa-exchange-alt"></i> ${isKmUnit ? 'به مایل' : 'به کیلومتر'}`;
+                updateUI();
+            }
+
+            // -------------------- مقداردهی اولیه --------------------
+            function init() {
+                // چند نقطه اولیه برای نقشه
+                const start = { lat: 35.6892, lng: 51.3890 };
+                tripData.pathPoints.push(start);
+                for (let i = 0; i < 10; i++) {
+                    const p = generateRandomPoint(currentPos.lat, currentPos.lng, 0.015);
+                    tripData.pathPoints.push(p);
+                    currentPos = p;
+                    tripData.distance += 0.05 + Math.random() * 0.12;
+                    tripData.duration += 1;
+                }
+                tripData.instantSpeed = 50 + Math.random() * 30;
+                tripData.maxSpeed = 85;
+                tripData.avgSpeed = 48;
+                tripData.leftTurns = 4;
+                tripData.rightTurns = 6;
+
+                updateUI();
+                updateMap();
+
+                document.getElementById('unitToggleBtn').addEventListener('click', toggleUnit);
+                document.getElementById('resetBtn').addEventListener('click', resetTrip);
+
+                isDriving = true;
+                intervalId = setInterval(simulateStep, 1000);
+            }
+
+            init();
+
+            window.addEventListener('beforeunload', function() {
+                if (intervalId) clearInterval(intervalId);
+            });
+
+        })();
+    </script>
+
+</body>
+</html>
