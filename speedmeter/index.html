@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>کیلومترسنج | خروجی عکس برای فیلم</title>
+    <title>کیلومترسنج | GPS پایدار</title>
     <!-- Leaflet for map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -11,8 +11,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <!-- Google Font (Vazir) -->
-    <link href="https://fonts.googleapis.com/css2?family=Vazir:wght@300;400;700;900&display=swap" rel="stylesheet" />
     <style>
         * {
             margin: 0;
@@ -23,7 +21,7 @@
         html,
         body {
             height: 100%;
-            font-family: 'Vazir', sans-serif;
+            font-family: 'Vazir', Tahoma, sans-serif;
             background: #0b1120;
             color: #e8edf5;
         }
@@ -57,7 +55,6 @@
             max-height: calc(100vh - 24px);
         }
 
-        /* ---------- هدر ---------- */
         .header {
             display: flex;
             justify-content: space-between;
@@ -92,7 +89,7 @@
             border: none;
             padding: 5px 12px;
             border-radius: 30px;
-            font-family: 'Vazir', sans-serif;
+            font-family: 'Vazir', Tahoma, sans-serif;
             font-weight: 700;
             font-size: 11px;
             color: #e8edf5;
@@ -142,34 +139,12 @@
             color: #fcd34d;
         }
 
-        .btn-warning:hover {
-            background: #6a4a2a;
-            border-color: #9a7a3a;
-        }
-
         .btn-purple {
             background: #3a1a4a;
             border-color: #5a2a7a;
             color: #c084fc;
         }
 
-        .btn-purple:hover {
-            background: #5a2a6a;
-            border-color: #7a3a9a;
-        }
-
-        .btn-pink {
-            background: #4a1a3a;
-            border-color: #7a2a5a;
-            color: #f472b6;
-        }
-
-        .btn-pink:hover {
-            background: #6a2a4a;
-            border-color: #9a3a6a;
-        }
-
-        /* ---------- سرعت لحظه‌ای ---------- */
         .speed-center {
             display: flex;
             flex-direction: column;
@@ -224,10 +199,6 @@
             border: 1px solid #2f405a;
         }
 
-        .speed-center .status i {
-            margin-left: 5px;
-        }
-
         .gps-status {
             position: absolute;
             top: 4px;
@@ -245,7 +216,11 @@
             border-color: #2a7a5a;
         }
 
-        /* ---------- گرید پارامترها ---------- */
+        .gps-status.error {
+            color: #f87171;
+            border-color: #7a2a2a;
+        }
+
         .params-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
@@ -261,10 +236,6 @@
             border: 1px solid #1e3146;
             text-align: center;
             transition: 0.15s;
-        }
-
-        .param-item:hover {
-            border-color: #3a5680;
         }
 
         .param-item .icon {
@@ -312,7 +283,6 @@
             color: #f472b6;
         }
 
-        /* ---------- نقشه ---------- */
         .map-section {
             margin-top: auto;
             padding-top: 8px;
@@ -336,7 +306,6 @@
             background: #0b1320;
         }
 
-        /* ---------- فوتر ---------- */
         .footer {
             margin-top: 4px;
             display: flex;
@@ -350,11 +319,37 @@
             gap: 4px;
         }
 
-        .footer span i {
-            margin-left: 3px;
+        .photo-settings {
+            background: #0f1928;
+            border-radius: 16px;
+            padding: 8px 14px;
+            border: 1px solid #1e3146;
+            margin-bottom: 8px;
+            flex-shrink: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
         }
 
-        /* ---------- مودال ---------- */
+        .photo-settings label {
+            font-size: 11px;
+            color: #7a8ba5;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .photo-settings select {
+            background: #1f3146;
+            color: #e8edf5;
+            border: 1px solid #2f405a;
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-family: 'Vazir', Tahoma, sans-serif;
+            font-size: 11px;
+        }
+
         .modal-overlay {
             display: none;
             position: fixed;
@@ -387,7 +382,6 @@
         .modal-content img {
             max-width: 100%;
             border-radius: 12px;
-            border: 1px solid #2a3a52;
         }
 
         .modal-close {
@@ -405,12 +399,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 0.2s;
-        }
-
-        .modal-close:hover {
-            background: #6d263a;
-            transform: scale(1.1);
         }
 
         .modal-actions {
@@ -421,57 +409,6 @@
             flex-wrap: wrap;
         }
 
-        /* ---------- تنظیمات عکس ---------- */
-        .photo-settings {
-            background: #0f1928;
-            border-radius: 16px;
-            padding: 10px 14px;
-            border: 1px solid #1e3146;
-            margin-bottom: 8px;
-            flex-shrink: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .photo-settings label {
-            font-size: 11px;
-            color: #7a8ba5;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .photo-settings input[type="range"] {
-            width: 100px;
-            background: #1f3146;
-            height: 4px;
-            border-radius: 4px;
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        .photo-settings input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #60a5fa;
-            cursor: pointer;
-        }
-
-        .photo-settings select {
-            background: #1f3146;
-            color: #e8edf5;
-            border: 1px solid #2f405a;
-            border-radius: 8px;
-            padding: 4px 10px;
-            font-family: 'Vazir', sans-serif;
-            font-size: 11px;
-        }
-
-        /* ---------- ریسپانسیو ---------- */
         @media screen and (max-width: 992px) {
             .params-grid {
                 grid-template-columns: repeat(4, 1fr);
@@ -479,52 +416,25 @@
         }
 
         @media screen and (max-width: 768px) {
-            .fullscreen-details {
-                padding: 8px 10px 6px;
-            }
-            .dashboard {
-                padding: 10px 12px 10px;
-                border-radius: 24px;
-            }
-            .header h1 {
-                font-size: 15px;
+            .params-grid {
+                grid-template-columns: repeat(3, 1fr);
             }
             .speed-center .big-speed {
                 font-size: 48px;
-            }
-            .speed-center .unit {
-                font-size: 18px;
-            }
-            .params-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 4px;
-            }
-            .param-item .pvalue {
-                font-size: 14px;
-            }
-            .map-wrapper {
-                height: 140px;
-            }
-            .btn {
-                font-size: 10px;
-                padding: 4px 10px;
-            }
-            .gps-status {
-                font-size: 9px;
-                padding: 2px 8px;
-                top: 3px;
-                right: 8px;
             }
             .photo-settings {
                 flex-direction: column;
                 align-items: stretch;
             }
-            .photo-settings input[type="range"] {
-                width: 100%;
-            }
         }
 
         @media screen and (max-width: 480px) {
+            .params-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .speed-center .big-speed {
+                font-size: 36px;
+            }
             .header {
                 flex-direction: column;
                 align-items: stretch;
@@ -533,41 +443,19 @@
             .controls {
                 justify-content: flex-start;
             }
-            .speed-center .big-speed {
-                font-size: 36px;
-            }
-            .speed-center .unit {
-                font-size: 14px;
-            }
-            .params-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 4px;
-            }
-            .param-item {
-                padding: 4px 4px;
-            }
-            .param-item .pvalue {
-                font-size: 13px;
-            }
-            .map-wrapper {
-                height: 110px;
-            }
-            .modal-content {
-                padding: 16px;
-            }
         }
     </style>
 </head>
 <body>
 
-    <!-- ====== مودال نمایش عکس ====== -->
+    <!-- ====== مودال ====== -->
     <div class="modal-overlay" id="screenshotModal">
         <div class="modal-content">
             <button class="modal-close" id="modalCloseBtn">&times;</button>
             <img id="screenshotImage" src="" alt="گزارش تصویری سفر" />
             <div class="modal-actions">
-                <button class="btn btn-success" id="downloadPngBtn"><i class="fas fa-download"></i> دانلود PNG (شفاف)</button>
-                <button class="btn btn-purple" id="downloadJpgBtn"><i class="fas fa-download"></i> دانلود JPG</button>
+                <button class="btn btn-success" id="downloadPngBtn"><i class="fas fa-download"></i> PNG (شفاف)</button>
+                <button class="btn btn-purple" id="downloadJpgBtn"><i class="fas fa-download"></i> JPG</button>
                 <button class="btn btn-warning" id="modalCloseBtn2"><i class="fas fa-times"></i> بستن</button>
             </div>
         </div>
@@ -587,25 +475,20 @@
                     </div>
                     <div class="controls">
                         <button class="btn btn-warning" id="unitToggleBtn"><i class="fas fa-exchange-alt"></i> تبدیل</button>
-                        <button class="btn btn-purple" id="screenshotBtn"><i class="fas fa-camera"></i> گرفتن عکس</button>
+                        <button class="btn btn-purple" id="screenshotBtn"><i class="fas fa-camera"></i> عکس</button>
                         <button class="btn btn-danger" id="resetBtn"><i class="fas fa-trash-alt"></i> حذف</button>
-                        <button class="btn btn-success" id="startGpsBtn"><i class="fas fa-play"></i> شروع</button>
+                        <button class="btn btn-success" id="startGpsBtn"><i class="fas fa-play"></i> شروع GPS</button>
                     </div>
                 </header>
 
                 <!-- ====== تنظیمات عکس ====== -->
                 <div class="photo-settings">
                     <label>
-                        <i class="fas fa-expand"></i> کیفیت
-                        <input type="range" id="qualityRange" min="1" max="3" step="0.5" value="2" />
-                        <span id="qualityLabel">2x</span>
-                    </label>
-                    <label>
                         <i class="fas fa-palette"></i> تم
                         <select id="themeSelect">
-                            <option value="dark">تاریک (مخصوص فیلم)</option>
+                            <option value="dark">تاریک (اوورلی فیلم)</option>
                             <option value="light">روشن</option>
-                            <option value="transparent">شفاف (PNG)</option>
+                            <option value="transparent">شفاف PNG</option>
                         </select>
                     </label>
                     <label>
@@ -616,13 +499,13 @@
                             <option value="compact">فشرده</option>
                         </select>
                     </label>
-                    <label style="color:#60a5fa;">
-                        <i class="fas fa-info-circle"></i> برای اوورلی فیلم، تم "تاریک" و کیفیت ۲x انتخاب کنید
+                    <label style="color:#fcd34d;">
+                        <i class="fas fa-info-circle"></i> برای حل مشکل Timeout: از مرورگر Chrome استفاده کنید
                     </label>
                 </div>
 
-                <!-- ====== سرعت لحظه‌ای ====== -->
-                <div class="speed-center" id="speedCenter">
+                <!-- ====== سرعت ====== -->
+                <div class="speed-center">
                     <div class="gps-status" id="gpsStatus"><i class="fas fa-circle" style="color: #ef4444; font-size: 8px;"></i> غیرفعال</div>
                     <div class="label"><i class="fas fa-gauge-high" style="margin-left: 5px;"></i>سرعت لحظه‌ای</div>
                     <div class="value-wrapper">
@@ -656,12 +539,12 @@
                     </div>
                     <div class="param-item">
                         <div class="icon purple"><i class="fas fa-arrow-left"></i></div>
-                        <div class="plabel">چرخش به چپ</div>
+                        <div class="plabel">چرخش چپ</div>
                         <div class="pvalue" id="leftTurnsDisplay">۰</div>
                     </div>
                     <div class="param-item">
                         <div class="icon purple"><i class="fas fa-arrow-right"></i></div>
-                        <div class="plabel">چرخش به راست</div>
+                        <div class="plabel">چرخش راست</div>
                         <div class="pvalue" id="rightTurnsDisplay">۰</div>
                     </div>
                     <div class="param-item">
@@ -700,7 +583,7 @@
                 <div class="map-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
                         <span style="font-size: 11px; color: #7a8ba5;"><i class="fas fa-map-marked-alt" style="color: #60a5fa;"></i> مسیر پیموده شده</span>
-                        <span style="font-size: 10px; color: #4a5a72;"><i class="fas fa-arrow-down"></i> اسکرول برای مشاهده کامل</span>
+                        <span style="font-size: 10px; color: #4a5a72;"><i class="fas fa-arrow-down"></i> اسکرول</span>
                     </div>
                     <div class="map-wrapper">
                         <div id="tripMap"></div>
@@ -709,7 +592,7 @@
 
                 <!-- ====== فوتر ====== -->
                 <div class="footer">
-                    <span><i class="fas fa-copyright"></i> ۱۴۰۶ – کیلومترسنج</span>
+                    <span><i class="fas fa-copyright"></i> کیلومترسنج</span>
                     <span id="footerInfo"><i class="fas fa-circle" style="color: #7a8ba5; font-size: 6px;"></i> GPS: غیرفعال</span>
                     <span id="coordsDisplay"><i class="fas fa-location-dot"></i> -- , --</span>
                     <span id="pointCount"><i class="fas fa-map-pin"></i> ۰ نقطه</span>
@@ -724,7 +607,7 @@
     <script>
         (function() {
             // ============================================================
-            // داده‌های سفر
+            // داده‌ها
             // ============================================================
             let tripData = {
                 maxSpeed: 0,
@@ -763,6 +646,8 @@
             let carMarker = null;
             let updateInterval = null;
             let screenshotDataUrl = null;
+            let gpsRetryCount = 0;
+            let gpsTimeoutId = null;
 
             // ============================================================
             // DOM
@@ -916,9 +801,15 @@
             }
 
             // ============================================================
-            // پردازش GPS
+            // پردازش GPS با مدیریت Timeout
             // ============================================================
             function processGpsPosition(position) {
+                // پاک کردن تایمر Timeout
+                if (gpsTimeoutId) {
+                    clearTimeout(gpsTimeoutId);
+                    gpsTimeoutId = null;
+                }
+
                 const coords = position.coords;
                 const lat = coords.latitude;
                 const lng = coords.longitude;
@@ -933,11 +824,13 @@
                 const now = Date.now();
                 const timestamp = new Date().toLocaleTimeString('fa-IR');
 
+                // بروزرسانی دقت و ماهواره
                 el.accuracyDisplay.innerHTML = `${accuracy.toFixed(1)} <small>m</small>`;
                 if (coords.satellites) {
                     el.satelliteDisplay.textContent = coords.satellites;
                 }
 
+                // شروع سفر
                 if (!tripData.isActive) {
                     tripData.isActive = true;
                     tripData.startTime = now;
@@ -951,14 +844,17 @@
                     el.gpsStatus.innerHTML = '<i class="fas fa-circle" style="color: #22c55e; font-size: 8px;"></i> فعال';
                     el.footerInfo.innerHTML = '<i class="fas fa-circle" style="color: #22c55e; font-size: 6px;"></i> GPS: فعال';
                     el.lastUpdateTime.textContent = `آخرین بروزرسانی: ${timestamp}`;
+                    gpsRetryCount = 0;
                     updateUI();
                     updateMap();
                     return;
                 }
 
+                // محاسبه زمان
                 const timeDiff = (now - tripData.lastTimestamp) / 1000;
                 if (timeDiff > 0 && timeDiff < 5) {
                     tripData.duration += timeDiff;
+
                     if (speed < 0.5) {
                         if (tripData.isMoving) {
                             tripData.isMoving = false;
@@ -979,10 +875,12 @@
                     }
                 }
 
+                // محاسبه مسافت
                 const prev = tripData.prevPosition;
                 const dist = calcDistance(prev.lat, prev.lng, lat, lng);
                 tripData.distance += dist;
 
+                // سرعت
                 tripData.instantSpeed = speed;
                 if (speed > tripData.maxSpeed) tripData.maxSpeed = speed;
 
@@ -990,6 +888,7 @@
                     tripData.avgSpeed = tripData.distance / (tripData.duration / 3600);
                 }
 
+                // ارتفاع
                 if (altitude > 0) {
                     if (altitude > tripData.maxAltitude) tripData.maxAltitude = altitude;
                     if (altitude < tripData.minAltitude) tripData.minAltitude = altitude;
@@ -1000,6 +899,7 @@
                     }
                 }
 
+                // شتاب
                 if (tripData.prevSpeedTime) {
                     const dt = (now - tripData.prevSpeedTime) / 1000;
                     if (dt > 0.1) {
@@ -1012,6 +912,7 @@
                 tripData.prevSpeed = speed;
                 tripData.prevSpeedTime = now;
 
+                // چرخش
                 if (heading > 0 && tripData.prevHeading !== null) {
                     const turn = detectTurn(tripData.prevHeading, heading);
                     if (turn === 1) tripData.rightTurns += 1;
@@ -1019,6 +920,7 @@
                 }
                 tripData.prevHeading = heading;
 
+                // ذخیره نقطه
                 tripData.pathPoints.push({ lat, lng, altitude, heading, speed });
                 if (tripData.pathPoints.length > 500) {
                     tripData.pathPoints = tripData.pathPoints.slice(-300);
@@ -1029,46 +931,165 @@
 
                 el.lastUpdateTime.textContent = `آخرین بروزرسانی: ${timestamp}`;
                 el.footerInfo.innerHTML = `<i class="fas fa-circle" style="color: #22c55e; font-size: 6px;"></i> GPS: فعال | ${tripData.pathPoints.length} نقطه`;
+                gpsRetryCount = 0;
                 updateUI();
                 updateMap();
+
+                // تنظیم مجدد تایمر برای تشخیص قطعی GPS
+                gpsTimeoutId = setTimeout(() => {
+                    if (isGpsRunning) {
+                        el.gpsStatus.className = 'gps-status error';
+                        el.gpsStatus.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #f87171; font-size: 8px;"></i> Timeout!';
+                        el.footerInfo.innerHTML = '<i class="fas fa-circle" style="color: #f87171; font-size: 6px;"></i> GPS: قطع شده';
+                        // تلاش مجدد برای اتصال
+                        reconnectGps();
+                    }
+                }, 10000); // 10 ثانیه timeout
+            }
+
+            // ============================================================
+            // مدیریت خطاهای GPS و reconnect
+            // ============================================================
+            function handleGpsError(error) {
+                console.error('GPS Error:', error);
+                let msg = 'خطا در GPS: ';
+
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        msg += 'دسترسی به GPS مسدود شده است. لطفاً مجوز را فعال کنید.';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        msg += 'موقعیت در دسترس نیست. لطفاً GPS دستگاه را فعال کنید.';
+                        break;
+                    case error.TIMEOUT:
+                        msg += 'زمان دریافت GPS به اتمام رسید. تلاش مجدد...';
+                        break;
+                    default:
+                        msg += error.message;
+                }
+
+                // نمایش خطا در UI
+                el.gpsStatus.className = 'gps-status error';
+                el.gpsStatus.innerHTML = `<i class="fas fa-exclamation-triangle" style="color: #f87171; font-size: 8px;"></i> خطا`;
+                el.footerInfo.innerHTML = `<i class="fas fa-circle" style="color: #f87171; font-size: 6px;"></i> GPS: ${error.code === 3 ? 'Timeout' : 'خطا'}`;
+
+                // اگر خطای Timeout بود، تلاش مجدد
+                if (error.code === 3) {
+                    gpsRetryCount++;
+                    if (gpsRetryCount < 5) {
+                        setTimeout(() => {
+                            if (isGpsRunning) {
+                                reconnectGps();
+                            }
+                        }, 2000 * gpsRetryCount);
+                    } else {
+                        alert('GPS پس از چندین تلاش موفق به اتصال نشد. لطفاً:\n' +
+                            '1. GPS دستگاه را فعال کنید\n' +
+                            '2. از مرورگر Chrome استفاده کنید\n' +
+                            '3. در فضای باز قرار بگیرید\n' +
+                            '4. دکمه "شروع GPS" را دوباره بزنید');
+                        stopGps();
+                    }
+                }
+            }
+
+            // ============================================================
+            // reconnect GPS
+            // ============================================================
+            function reconnectGps() {
+                if (!isGpsRunning) return;
+
+                if (gpsWatchId !== null) {
+                    navigator.geolocation.clearWatch(gpsWatchId);
+                    gpsWatchId = null;
+                }
+
+                el.gpsStatus.className = 'gps-status';
+                el.gpsStatus.innerHTML = '<i class="fas fa-spinner fa-spin" style="color: #facc15; font-size: 8px;"></i> در حال اتصال مجدد...';
+
+                gpsWatchId = navigator.geolocation.watchPosition(
+                    processGpsPosition,
+                    handleGpsError, {
+                        enableHighAccuracy: true,
+                        timeout: 15000,
+                        maximumAge: 5000,
+                    }
+                );
             }
 
             // ============================================================
             // مدیریت GPS
             // ============================================================
             function startGps() {
-                if (isGpsRunning) { stopGps(); return; }
-                if (!navigator.geolocation) { alert('مرورگر شما از GPS پشتیبانی نمی‌کند.'); return; }
+                if (isGpsRunning) {
+                    stopGps();
+                    return;
+                }
 
+                if (!navigator.geolocation) {
+                    alert('مرورگر شما از GPS پشتیبانی نمی‌کند.\n' +
+                        'لطفاً از مرورگر Chrome یا Firefox استفاده کنید.');
+                    return;
+                }
+
+                // بررسی مجوز
                 navigator.permissions.query({ name: 'geolocation' }).then(result => {
                     if (result.state === 'denied') {
-                        alert('دسترسی به GPS در مرورگر شما مسدود شده است.');
+                        alert('❌ دسترسی به GPS در مرورگر شما مسدود شده است.\n\n' +
+                            'برای رفع مشکل:\n' +
+                            '1. روی آیکون قفل یا ⚠️ کنار آدرس کلیک کنید\n' +
+                            '2. مجوز موقعیت را به "Allow" تغییر دهید\n' +
+                            '3. صفحه را دوباره بارگذاری کنید');
                         return;
                     }
 
+                    if (result.state === 'prompt') {
+                        // درخواست مجوز
+                    }
+
+                    gpsRetryCount = 0;
+
                     gpsWatchId = navigator.geolocation.watchPosition(
                         processGpsPosition,
-                        function(error) {
-                            console.error('GPS Error:', error);
-                            alert('خطا در دریافت GPS: ' + error.message);
-                            stopGps();
-                        }, {
+                        handleGpsError, {
                             enableHighAccuracy: true,
                             timeout: 15000,
-                            maximumAge: 2000,
+                            maximumAge: 5000,
                         }
                     );
 
                     isGpsRunning = true;
                     document.getElementById('startGpsBtn').innerHTML = '<i class="fas fa-stop"></i> توقف';
                     el.gpsStatus.className = 'gps-status';
-                    el.gpsStatus.innerHTML = '<i class="fas fa-spinner fa-spin" style="color: #facc15; font-size: 8px;"></i> در حال اتصال...';
+                    el.gpsStatus.innerHTML = '<i class="fas fa-spinner fa-spin" style="color: #facc15; font-size: 8px;"></i> در حال دریافت GPS...';
                     el.lastUpdateTime.textContent = 'در حال دریافت GPS...';
+                    el.footerInfo.innerHTML = '<i class="fas fa-spinner fa-spin" style="color: #facc15; font-size: 6px;"></i> GPS: در حال اتصال';
 
+                    // تایمر برای بروزرسانی
                     if (updateInterval) clearInterval(updateInterval);
                     updateInterval = setInterval(() => {
                         if (tripData.isActive) updateUI();
                     }, 1000);
+
+                    // تایمر 15 ثانیه برای اولین دریافت
+                    setTimeout(() => {
+                        if (isGpsRunning && !tripData.isActive) {
+                            el.gpsStatus.className = 'gps-status error';
+                            el.gpsStatus.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #f87171; font-size: 8px;"></i> Timeout!';
+                            el.footerInfo.innerHTML =
+                            '<i class="fas fa-circle" style="color: #f87171; font-size: 6px;"></i> GPS: Timeout';
+                            alert('⏱️ GPS Timeout!\n\n' +
+                                'دلایل احتمالی:\n' +
+                                '1. GPS دستگاه شما فعال نیست\n' +
+                                '2. در فضای بسته هستید (به فضای باز بروید)\n' +
+                                '3. از مرورگر Chrome استفاده کنید\n\n' +
+                                'دکمه "شروع GPS" را دوباره بزنید');
+                            stopGps();
+                        }
+                    }, 15000);
+
+                }).catch(err => {
+                    alert('خطا در بررسی مجوز GPS: ' + err.message);
                 });
             }
 
@@ -1077,13 +1098,20 @@
                     navigator.geolocation.clearWatch(gpsWatchId);
                     gpsWatchId = null;
                 }
+                if (gpsTimeoutId) {
+                    clearTimeout(gpsTimeoutId);
+                    gpsTimeoutId = null;
+                }
                 isGpsRunning = false;
-                document.getElementById('startGpsBtn').innerHTML = '<i class="fas fa-play"></i> شروع';
+                document.getElementById('startGpsBtn').innerHTML = '<i class="fas fa-play"></i> شروع GPS';
                 el.gpsStatus.className = 'gps-status';
                 el.gpsStatus.innerHTML = '<i class="fas fa-circle" style="color: #ef4444; font-size: 8px;"></i> غیرفعال';
                 el.footerInfo.innerHTML = '<i class="fas fa-circle" style="color: #7a8ba5; font-size: 6px;"></i> GPS: غیرفعال';
-                if (updateInterval) { clearInterval(updateInterval);
-                    updateInterval = null; }
+                if (updateInterval) {
+                    clearInterval(updateInterval);
+                    updateInterval = null;
+                }
+                gpsRetryCount = 0;
             }
 
             // ============================================================
@@ -1131,9 +1159,14 @@
                 el.lastUpdateTime.textContent = 'در انتظار GPS';
                 el.pointCount.textContent = '۰ نقطه';
                 updateUI();
-                document.getElementById('startGpsBtn').innerHTML = '<i class="fas fa-play"></i> شروع';
+                document.getElementById('startGpsBtn').innerHTML = '<i class="fas fa-play"></i> شروع GPS';
                 isGpsRunning = false;
                 screenshotDataUrl = null;
+                gpsRetryCount = 0;
+                if (gpsTimeoutId) {
+                    clearTimeout(gpsTimeoutId);
+                    gpsTimeoutId = null;
+                }
             }
 
             // ============================================================
@@ -1147,15 +1180,14 @@
             }
 
             // ============================================================
-            // گرفتن اسکرین‌شات با تنظیمات
+            // اسکرین‌شات
             // ============================================================
             function takeScreenshot() {
                 if (tripData.pathPoints.length < 2) {
-                    alert('هنوز داده‌ای برای عکس گرفتن وجود ندارد. لطفاً GPS را شروع کنید و کمی حرکت کنید.');
+                    alert('هنوز داده‌ای برای عکس گرفتن وجود ندارد.');
                     return;
                 }
 
-                const quality = parseFloat(document.getElementById('qualityRange').value);
                 const theme = document.getElementById('themeSelect').value;
                 const size = document.getElementById('sizeSelect').value;
 
@@ -1166,14 +1198,13 @@
 
                 let element = document.getElementById('dashboardCapture');
 
-                // اعمال تم
+                // اعمال تنظیمات
                 if (theme === 'transparent') {
                     document.querySelector('.dashboard').style.background = 'transparent';
                     document.querySelector('.dashboard').style.border = 'none';
                     document.querySelector('.dashboard').style.boxShadow = 'none';
                 } else if (theme === 'light') {
                     document.querySelector('.dashboard').style.background = '#f0f4f8';
-                    document.querySelector('.dashboard').style.color = '#1e293b';
                     document.querySelector('.dashboard').style.borderColor = '#cbd5e1';
                 } else {
                     document.querySelector('.dashboard').style.background = '#131e2f';
@@ -1181,7 +1212,6 @@
                     document.querySelector('.dashboard').style.boxShadow = '0 20px 50px rgba(0, 0, 0, 0.7)';
                 }
 
-                // مخفی کردن نقشه در حالت speed
                 if (size === 'speed') {
                     document.querySelector('.map-section').style.display = 'none';
                     document.getElementById('paramsGrid').style.display = 'none';
@@ -1191,12 +1221,11 @@
                 } else {
                     document.querySelector('.map-section').style.display = 'block';
                     document.getElementById('paramsGrid').style.gridTemplateColumns = 'repeat(6, 1fr)';
+                    document.getElementById('paramsGrid').style.display = 'grid';
                 }
 
-                const scale = quality;
-
                 html2canvas(element, {
-                    scale: scale,
+                    scale: 2.5,
                     backgroundColor: theme === 'transparent' ? null : (theme === 'light' ? '#f0f4f8' : '#0b1120'),
                     allowTaint: true,
                     useCORS: true,
@@ -1205,9 +1234,6 @@
                     height: element.scrollHeight,
                     windowWidth: element.scrollWidth,
                     windowHeight: element.scrollHeight,
-                    onclone: function(clonedDoc) {
-                        // تنظیمات اضافی برای کلون
-                    }
                 }).then(canvas => {
                     // بازگرداندن تنظیمات
                     document.querySelector('.dashboard').style.background = '#131e2f';
@@ -1220,15 +1246,14 @@
                     screenshotDataUrl = canvas.toDataURL('image/png');
 
                     const modal = document.getElementById('screenshotModal');
-                    const img = document.getElementById('screenshotImage');
-                    img.src = screenshotDataUrl;
+                    document.getElementById('screenshotImage').src = screenshotDataUrl;
                     modal.classList.add('show');
 
                     btn.innerHTML = originalHtml;
                     btn.disabled = false;
                 }).catch(err => {
-                    console.error('خطا در ساخت عکس:', err);
-                    alert('خطا در ساخت عکس: ' + err.message);
+                    console.error('خطا:', err);
+                    alert('خطا در ساخت عکس');
                     document.querySelector('.dashboard').style.background = '#131e2f';
                     document.querySelector('.dashboard').style.border = '1px solid #2a3a52';
                     document.querySelector('.dashboard').style.boxShadow = '0 20px 50px rgba(0, 0, 0, 0.7)';
@@ -1240,14 +1265,8 @@
                 });
             }
 
-            // ============================================================
-            // دانلود عکس
-            // ============================================================
             function downloadPng() {
-                if (!screenshotDataUrl) {
-                    alert('ابتدا عکس را بگیرید.');
-                    return;
-                }
+                if (!screenshotDataUrl) { alert('ابتدا عکس را بگیرید.'); return; }
                 const link = document.createElement('a');
                 link.download = `trip_overlay_${new Date().toISOString().slice(0,10)}.png`;
                 link.href = screenshotDataUrl;
@@ -1255,22 +1274,17 @@
             }
 
             function downloadJpg() {
-                if (!screenshotDataUrl) {
-                    alert('ابتدا عکس را بگیرید.');
-                    return;
-                }
-                // تبدیل به JPG
-                const canvas = document.createElement('canvas');
+                if (!screenshotDataUrl) { alert('ابتدا عکس را بگیرید.'); return; }
                 const img = new Image();
                 img.onload = function() {
+                    const canvas = document.createElement('canvas');
                     canvas.width = img.width;
                     canvas.height = img.height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0);
-                    const jpgDataUrl = canvas.toDataURL('image/jpeg', 0.95);
                     const link = document.createElement('a');
                     link.download = `trip_overlay_${new Date().toISOString().slice(0,10)}.jpg`;
-                    link.href = jpgDataUrl;
+                    link.href = canvas.toDataURL('image/jpeg', 0.95);
                     link.click();
                 };
                 img.src = screenshotDataUrl;
@@ -1318,13 +1332,6 @@
             }
 
             // ============================================================
-            // تنظیمات کیفیت
-            // ============================================================
-            document.getElementById('qualityRange').addEventListener('input', function() {
-                document.getElementById('qualityLabel').textContent = this.value + 'x';
-            });
-
-            // ============================================================
             // راه‌اندازی
             // ============================================================
             function init() {
@@ -1364,4 +1371,4 @@
     </script>
 
 </body>
-    </html>
+</html>
