@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="منوی دیجیتال کافه توکا | Two Ka - بهترین تجربه قهوه و خوراکی" />
+  <title>منوی دیجیتال توکا | Two Ka</title>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <!-- Vazirmatn Font -->
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+  
+  <style>
+    :root {
+      --gold: #d4af37;
+      --gold-light: #f0d77b;
+      --gold-dark: #b8962e;
+      --bg-dark: #0d0d0d;
+      --bg-card: #161616;
+      --bg-card-hover: #1c1c1c;
+      --text: #f5f5f5;
+      --text-muted: #a0a0a0;
+      --success: #2ecc71;
+      --danger: #e74c3c;
+      --border: rgba(212, 175, 55, 0.25);
+      --shadow-gold: 0 8px 32px rgba(212, 175, 55, 0.15);
+      --radius: 16px;
+      --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ========== HEADER ========== */
+    .header {
+      position: relative;
+      background: linear-gradient(135deg, #0d0d0d 0%, #1a1508 50%, #0d0d0d 100%);
+      padding: 28px 20px 20px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 40%, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .logo-area {
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-en {
+      font-size: 0.95rem;
+      letter-spacing: 4px;
+      color: var(--gold);
+      font-weight: 500;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      opacity: 0.9;
+    }
+
+    .logo-fa {
+      font-size: 2.6rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--gold-light), var(--gold), var(--gold-dark));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+      letter-spacing: -1px;
+    }
+
+    .tagline {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    .status-bar {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      backdrop-filter: blur(8px);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .status-dot.open {
+      background: var(--success);
+      box-shadow: 0 0 10px var(--success);
+    }
+
+    .status-dot.closed {
+      background: var(--danger);
+      box-shadow: 0 0 10px var(--danger);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.9); }
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    .social-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--border);
+      color: var(--gold);
+      font-size: 1.2rem;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .social-links a:hover {
+      background: var(--gold);
+      color: #0d0d0d;
+      transform: translateY(-3px) scale(1.08);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    }
+
+    /* ========== CATEGORY NAV ========== */
+    .category-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 13, 13, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .category-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-inner {
+      display: flex;
+      gap: 10px;
+      padding: 0 16px;
+      width: max-content;
+      margin: 0 auto;
+    }
+
+    .nav-btn {
+      flex-shrink: 0;
+      padding: 10px 20px;
+      border-radius: 50px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #0d0d0d;
+      border-color: transparent;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
+    }
+
+    /* ========== MAIN ========== */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px 80px;
+    }
+
+    .section {
+      margin-bottom: 48px;
+      scroll-margin-top: 80px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 22px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-title i {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+
+    @media (min-width: 600px) {
+      .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 960px) {
+      .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* ========== PRODUCT CARD ========== */
+    .product-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: var(--transition);
+      opacity: 0;
+      transform: translateY(30px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(212, 175, 55, 0.5);
+      box-shadow: var(--shadow-gold);
+      background: var(--bg-card-hover);
+    }
+
+    .product-img-wrap {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+    }
+
+    .product-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .product-card:hover .product-img {
+      transform: scale(1.08);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #0d0d0d;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    .product-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .product-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .product-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      flex-grow: 1;
+      line-height: 1.6;
+    }
+
+    .product-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .product-price {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    .product-price span {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-right: 4px;
+    }
+
+    .product-rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.85rem;
+      color: var(--gold-light);
+    }
+
+    .product-rating .stars {
+      color: var(--gold);
+      letter-spacing: 1px;
+    }
+
+    .comment-btn {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--gold);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .comment-btn:hover {
+      background: rgba(212, 175, 55, 0.15);
+      border-color: var(--gold);
+    }
+
+    /* Comments */
+    .comments-list {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 12px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .comment-item {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .comment-author {
+      font-weight: 600;
+      color: var(--gold-light);
+    }
+
+    .comment-stars {
+      color: var(--gold);
+      font-size: 0.75rem;
+    }
+
+    .comment-text {
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Comment Form */
+    .comment-form {
+      display: none;
+      background: rgba(212, 175, 55, 0.06);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 8px;
+      animation: slideDown 0.3s ease;
+    }
+
+    .comment-form.show {
+      display: block;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.25s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--gold);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    .stars-select {
+      display: flex;
+      gap: 6px;
+      direction: ltr;
+      justify-content: flex-end;
+    }
+
+    .stars-select i {
+      font-size: 1.4rem;
+      color: #444;
+      cursor: pointer;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .stars-select i:hover,
+    .stars-select i.active {
+      color: var(--gold);
+      transform: scale(1.15);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-submit {
+      flex: 1;
+      padding: 10px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #0d0d0d;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-submit:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    .btn-cancel {
+      padding: 10px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-cancel:hover {
+      border-color: var(--text-muted);
+      color: var(--text);
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      text-align: center;
+      padding: 28px 20px;
+      border-top: 1px solid var(--border);
+      background: #0a0a0a;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-logo {
+      font-size: 1.1rem;
+      color: var(--gold);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #111;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--gold-dark);
+      border-radius: 3px;
+    }
+
+    /* Loading animation for cards */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-area">
+      <div class="logo-en">TWO KA</div>
+      <div class="logo-fa">توکا</div>
+      <p class="tagline">تجربه‌ای متفاوت از طعم و کیفیت</p>
+      
+      <div class="status-bar">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">در حال بررسی وضعیت...</span>
+      </div>
+
+      <div class="social-links">
+        <a href="https://instagram.com/two.ka" target="_blank" rel="noopener" title="اینستاگرام توکا" aria-label="اینستاگرام">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://t.me/two_ka" target="_blank" rel="noopener" title="تلگرام توکا" aria-label="تلگرام">
+          <i class="fab fa-telegram-plane"></i>
+        </a>
+        <a href="https://two-ka.ir" target="_blank" rel="noopener" title="وب‌سایت" aria-label="وب‌سایت">
+          <i class="fas fa-globe"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- CATEGORY NAV -->
+  <nav class="category-nav" id="categoryNav">
+    <div class="nav-inner">
+      <button class="nav-btn active" data-target="hot">نوشیدنی گرم</button>
+      <button class="nav-btn" data-target="cold">نوشیدنی سرد</button>
+      <button class="nav-btn" data-target="appetizer">پیش‌غذا</button>
+      <button class="nav-btn" data-target="main">غذای اصلی</button>
+      <button class="nav-btn" data-target="dessert">دسر</button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- HOT DRINKS -->
+    <section class="section" id="hot">
+      <h2 class="section-title"><i class="fas fa-mug-hot"></i> نوشیدنی‌های گرم</h2>
+      <div class="products-grid">
+
+        <!-- Product 1 -->
+        <div class="product-card" data-id="1">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&h=350&fit=crop" alt="اسپرسو" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">اسپرسو</h3>
+            <p class="product-desc">شات خالص قهوه ایتالیایی با عطر غنی و کرمای مخملی. انتخاب کلاسیک عاشقان قهوه.</p>
+            <div class="product-meta">
+              <div class="product-price">۴۵٬۰۰۰ <span>تومان</span></div>
+              <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span>۴.۸</span>
+              </div>
+            </div>
+            <button class="comment-btn" onclick="toggleForm(this)">
+              <i class="far fa-comment-dots"></i> ثبت نظر
+            </button>
+            <div class="comment-form">
+              <div class="form-group">
+                <label>امتیاز شما</label>
+                <div class="stars-select" data-rating="0">
+                  <i class="far fa-star" data-value="1"></i>
+                  <i class="far fa-star" data-value="2"></i>
+                  <i class="far fa-star" data-value="3"></i>
+                  <i class="far fa-star" data-value="4"></i>
+                  <i class="far fa-star" data-value="5"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>نام شما</label>
+                <input type="text" placeholder="مثلاً سارا" class="input-name" />
+              </div>
+              <div class="form-group">
+                <label>نظر شما</label>
+                <textarea placeholder="تجربه‌تون از این محصول رو بنویسید..." class="input-text"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn-submit" onclick="submitComment(this)">ارسال نظر</button>
+                <button class="btn-cancel" onclick="toggleForm(this)">انصراف</button>
+              </div>
+            </div>
+            <div class="comments-list">
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">نیما</span>
+                  <span class="comment-stars">★★★★★</span>
+                </div>
+                <div class="comment-text">بهترین اسپرسویی که تا حالا خوردم. کرماش عالی بود!</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">مریم</span>
+                  <span class="comment-stars">★★★★☆</span>
+                </div>
+                <div class="comment-text">عطر فوق‌العاده‌ای داره. پیشنهاد می‌کنم.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="product-card" data-id="2">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1572442388796-11668a47ed91?w=500&h=350&fit=crop" alt="لاته" loading="lazy" />
+            <span class="product-badge">محبوب</span>
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">لاته</h3>
+            <p class="product-desc">ترکیب نرم اسپرسو با شیر بخار داده شده و لایه‌ای از فوم مخملی. شیرین و متعادل.</p>
+            <div class="product-meta">
+              <div class="product-price">۶۵٬۰۰۰ <span>تومان</span></div>
+              <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span>۴.۹</span>
+              </div>
+            </div>
+            <button class="comment-btn" onclick="toggleForm(this)">
+              <i class="far fa-comment-dots"></i> ثبت نظر
+            </button>
+            <div class="comment-form">
+              <div class="form-group">
+                <label>امتیاز شما</label>
+                <div class="stars-select" data-rating="0">
+                  <i class="far fa-star" data-value="1"></i>
+                  <i class="far fa-star" data-value="2"></i>
+                  <i class="far fa-star" data-value="3"></i>
+                  <i class="far fa-star" data-value="4"></i>
+                  <i class="far fa-star" data-value="5"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>نام شما</label>
+                <input type="text" placeholder="مثلاً علی" class="input-name" />
+              </div>
+              <div class="form-group">
+                <label>نظر شما</label>
+                <textarea placeholder="تجربه‌تون از این محصول رو بنویسید..." class="input-text"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn-submit" onclick="submitComment(this)">ارسال نظر</button>
+                <button class="btn-cancel" onclick="toggleForm(this)">انصراف</button>
+              </div>
+            </div>
+            <div class="comments-list">
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">سارا</span>
+                  <span class="comment-stars">★★★★★</span>
+                </div>
+                <div class="comment-text">لاته‌شون حرف نداره. فومش عالی و طعمش ملایم.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="product-card" data-id="3">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1534778101976-628585759c4a?w=500&h=350&fit=crop" alt="کاپوچینو" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">کاپوچینو</h3>
+            <p class="product-desc">اسپرسو، شیر و فوم غلیظ با نسبت کلاسیک ایتالیایی. رویه با پودر کاکائو تزئین شده.</p>
+            <div class="product-meta">
+              <div class="product-price">۶۰٬۰۰۰ <span>تومان</span></div>
+              <div class="product-rating">
+                <span class="stars">★★★★☆</span>
+                <span>۴.۶</span>
+              </div>
+            </div>
+            <button class="comment-btn" onclick="toggleForm(this)">
+              <i class="far fa-comment-dots"></i> ثبت نظر
+            </button>
+            <div class="comment-form">
+              <div class="form-group">
+                <label>امتیاز شما</label>
+                <div class="stars-select" data-rating="0">
+                  <i class="far fa-star" data-value="1"></i>
+                  <i class="far fa-star" data-value="2"></i>
+                  <i class="far fa-star" data-value="3"></i>
+                  <i class="far fa-star" data-value="4"></i>
+                  <i class="far fa-star" data-value="5"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>نام شما</label>
+                <input type="text" placeholder="نام شما" class="input-name" />
+              </div>
+              <div class="form-group">
+                <label>نظر شما</label>
+                <textarea placeholder="نظر خود را بنویسید..." class="input-text"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn-submit" onclick="submitComment(this)">ارسال نظر</button>
+                <button class="btn-cancel" onclick="toggleForm(this)">انصراف</button>
+              </div>
+            </div>
+            <div class="comments-list">
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">رضا</span>
+                  <span class="comment-stars">★★★★★</span>
+                </div>
+                <div class="comment-text">کاپوچینو واقعی با فوم درست. عالیه!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 4 -->
+        <div class="product-card" data-id="4">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1511920170033-f8396924c348?w=500&h=350&fit=crop" alt="هات چاکلت" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">هات چاکلت</h3>
+            <p class="product-desc">شکلات تلخ بلژیکی ذوب‌شده با شیر داغ و خامه. مناسب روزهای سرد و لحظات خاص.</p>
+            <div class="product-meta">
+              <div class="product-price">۵۵٬۰۰۰ <span>تومان</span></div>
+              <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span>۴.۷</span>
+              </div>
+            </div>
+            <button class="comment-btn" onclick="toggleForm(this)">
+              <i class="far fa-comment-dots"></i> ثبت نظر
+            </button>
+            <div class="comment-form">
+              <div class="form-group">
+                <label>امتیاز شما</label>
+                <div class="stars-select" data-rating="0">
+                  <i class="far fa-star" data-value="1"></i>
+                  <i class="far fa-star" data-value="2"></i>
+                  <i class="far fa-star" data-value="3"></i>
+                  <i class="far fa-star" data-value="4"></i>
+                  <i class="far fa-star" data-value="5"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>نام شما</label>
+                <input type="text" placeholder="نام شما" class="input-name" />
+              </div>
+              <div class="form-group">
+                <label>نظر شما</label>
+                <textarea placeholder="نظر خود را بنویسید..." class="input-text"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn-submit" onclick="submitComment(this)">ارسال نظر</button>
+                <button class="btn-cancel" onclick="toggleForm(this)">انصراف</button>
+              </div>
+            </div>
+            <div class="comments-list">
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">الهام</span>
+                  <span class="comment-stars">★★★★★</span>
+                </div>
+                <div class="comment-text">شکلاتش واقعی و غلیظه. عاشقش شدم.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- COLD DRINKS -->
+    <section class="section" id="cold">
+      <h2 class="section-title"><i class="fas fa-snowflake"></i> نوشیدنی‌های سرد</h2>
+      <div class="products-grid">
+
+        <div class="product-card" data-id="5">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=500&h=350&fit=crop" alt="آیس لاته" loading="lazy" />
+            <span class="product-badge">پرفروش</span>
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">آیس لاته</h3>
+            <p class="product-desc">اسپرسو سرد روی شیر یخ‌زده با یخ فراوان. طعمی خنک و انرژی‌بخش برای روزهای گرم.</p>
+            <div class="product-meta">
+              <div class="product-price">۷۰٬۰۰۰ <span>تومان</span></div>
+              <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span>۴.۸</span>
+              </div>
+            </div>
+            <button class="comment-btn" onclick="toggleForm(this)">
+              <i class="far fa-comment-dots"></i> ثبت نظر
+            </button>
+            <div class="comment-form">
+              <div class="form-group">
+                <label>امتیاز شما</label>
+                <div class="stars-select" data-rating="0">
+                  <i class="far fa-star" data-value="1"></i>
+                  <i class="far fa-star" data-value="2"></i>
+                  <i class="far fa-star" data-value="3"></i>
+                  <i class="far fa-star" data-value="4"></i>
+                  <i class="far fa-star" data-value="5"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>نام شما</label>
+                <input type="text" placeholder="نام شما" class="input-name" />
+              </div>
+              <div class="form-group">
+                <label>نظر شما</label>
+                <textarea placeholder="نظر خود را بنویسید..." class="input-text"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn-submit" onclick="submitComment(this)">ارسال نظر</button>
+                <button class="btn-cancel" onclick="toggleForm(this)">انصراف</button>
+              </div>
+            </div>
+            <div class="comments-list">
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">امیر</span>
+                  <span class="comment-stars">★★★★★</span>
+                </div>
+                <div class="comment-text">تو گرمای تابستون نجات‌بخشه. طعمش عالیه.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="6">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=500&h=350&fit=crop" alt="آیس موکا" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">آیس موکا</h3>
+            <p class="product-desc">ترکیب اسپرسو، شکلات و شیر سرد با یخ. طعمی شیرین و جذاب برای دوست‌داران شکلات.</p>
+            <div class="product-meta">
+              <div class="product-price">۷۵٬۰۰۰ <span>تومان</span></div>
+              <div class="product-rating">
+                <span class="stars">★★★★☆</span>
+                <span>۴.۵</span>
+              </div>
+            </div>
+            <button class="comment-btn" onclick="toggleForm(this)">
+              <i class="far fa-comment-dots"></i> ثبت نظر
+            </button>
+            <div class="comment-form">
+              <div class="form-group">
+                <label>امتیاز شما</label>
+                <div class="stars-select" data-rating="0">
+                  <i class="far fa-star" data-value="1"></i>
+                  <i class="far fa-star" data-value="2"></i>
+                  <i class="far fa-star" data-value="3"></i>
+                  <i class="far fa-star" data-value="4"></i>
+                  <i class="far fa-star" data-value="5"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>نام شما</label>
+                <input type="text" placeholder="نام شما" class="input-name" />
+              </div>
+              <div class="form-group">
+                <label>نظر شما</label>
+                <textarea placeholder="نظر خود را بنویسید..." class="input-text"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn-submit" onclick="submitComment(this)">ارسال نظر</button>
+                <button class="btn-cancel" onclick="toggleForm(this)">انصراف</button>
+              </div>
+            </div>
+            <div class="comments-list">
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">نازنین</span>
+                  <span class="comment-stars">★★★★★</span>
+                </div>
+                <div class="comment-text">شکلات و قهوه با هم عالی ترکیب شدن.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="7">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1622597467836-f3285f2131b8?w=500&h=350&fit=crop" alt="لیموناد" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">لیموناد خانگی</h3>
+            <p class="product-desc">آب لیمو تازه، نعناع و کمی شکر با یخ فراوان. خنک‌کننده و طبیعی بدون افزودنی مصنوعی.</p>
+            <div class="product-meta">
+              <div class="product-price">۴۵٬۰۰۰ <span>تومان</span></div>
+              <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span>۴.۷</span>
+              </div>
+            </div>
+            <button class="comment-btn" onclick="toggleForm(this)">
+              <i class="far fa-comment-dots"></i> ثبت نظر
+            </button>
+            <div class="comment-form">
+              <div class="form-group">
+                <label>امتیاز شما</label>
+                <div class="stars-select" data-rating="0">
+                  <i class="far fa-star" data-value="1"></i>
+                  <i class="far fa-star" data-value="2"></i>
+                  <i class="far fa-star" data-value="3"></i>
+                  <i class="far fa-star" data-value="4"></i>
+                  <i class="far fa-star" data-value="5"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>نام شما</label>
+                <input type="text" placeholder="نام شما" class="input-name" />
+              </div>
+              <div class="form-group">
+                <label>نظر شما</label>
+                <textarea placeholder="نظر خود را بنویسید..." class="input-text"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn-submit" onclick="submitComment(this)">ارسال نظر</button>
+                <button class="btn-cancel" onclick="toggleForm(this)">انصراف</button>
+              </div>
+            </div>
+            <div class="comments-list">
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">کیان</span>
+                  <span class="comment-stars">★★★★☆</span>
+                </div>
+                <div class="comment-text">تازه و خوشمزه. نعناعش حس خوبی می‌ده.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="8">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1505252585461-04db1eb84625?w=500&h=350&fit=crop" alt="اسموتی" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">اسموتی میوه‌ای</h3>
+            <p class="product-desc">مخلوط موز، توت‌فرنگی و انبه با ماست یونانی. مقوی، خوش‌رنگ و بدون شکر اضافه.</p>
+            <div class="product-meta">
+              <div class="product-price">۹۰٬۰۰۰ <span>تومان</span></div>
+              <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span>۴.۹</span>
+              </div>
+            </div>
+            <button class="comment-btn" onclick="toggleForm(this)">
+              <i class="far fa-comment-dots"></i> ثبت نظر
+            </button>
+            <div class="comment-form">
+              <div class="form-group">
+                <label>امتیاز شما</label>
+                <div class="stars-select" data-rating="0">
+                  <i class="far fa-star" data-value="1"></i>
+                  <i class="far fa-star" data-value="2"></i>
+                  <i class="far fa-star" data-value="3"></i>
+                  <i class="far fa-star" data-value="4"></i>
+                  <i class="far fa-star" data-value="5"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>نام شما</label>
+                <input type="text" placeholder="نام شما" class="input-name" />
+              </div>
+              <div class="form-group">
+                <label>نظر شما</label>
+                <textarea placeholder="نظر خود را بنویسید..." class="input-text"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn-submit" onclick="submitComment(this)">ارسال نظر</button>
+                <button class="btn-cancel" onclick="toggleForm(this)">انصراف</button>
+              </div>
+            </div>
+            <div class="comments-list">
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">هستی</span>
+                  <span class="comment-stars">★★★★★</span>
+                </div>
+                <div class="comment-text">طعم میوه‌ها طبیعی و غلیظه. عالی!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- APPETIZERS -->
+    <section class="section" id="appetizer">
+      <h2 class="section-title"><i class="fas fa-utensils"></i> پیش‌غذاها</h2>
+      <div class="products-grid">
+
+        <div class="product-card" data-id="9">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500&h=350&fit=crop" alt="سیب‌زمینی" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">سیب‌زمینی سرخ‌کرده</h3>
+            <p class="product-desc">سیب‌زمینی تازه با ادویه‌جات مخصوص خانه، سرو شده با سس مخصوص توکا.</p>
+            <div class="product-meta">
+              <div class="product-price">۸۵٬۰۰۰ <span>تومان</span></div>
+              <div class="product-rating">
+                <span class="stars">★★★★☆</span>
+                <span>۴.۴</span>
+              </div>
+            </div>
+            <button class="comment-btn" onclick="toggleForm(this)">
+              <i class="far fa-comment-dots"></i> ثبت نظر
+            </button>
+            <div class="comment-form">
+              <div class="form-group">
+                <label>امتیاز شما</label>
+                <div class="stars-select" data-rating="0">
+                  <i class="far fa-star" data-value="1"></i>
+                  <i class="far fa-star" data-value="2"></i>
+                  <i class="far fa-star" data-value="3"></i>
+                  <i class="far fa-star" data-value="4"></i>
+                  <i class="far fa-star" data-value="5"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>نام شما</label>
+                <input type="text" placeholder="نام شما" class="input-name" />
+              </div>
+              <div class="form-group">
+                <label>نظر شما</label>
+                <textarea placeholder="نظر خود را بنویسید..." class="input-text"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn-submit" onclick="submitComment(this)">ارسال نظر</button>
+                <button class="btn-cancel" onclick="toggleForm(this)">انصراف</button>
+              </div>
+            </div>
+            <div class="comments-list">
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">پارسا</span>
+                  <span class="comment-stars">★★★★★</span>
+                </div>
+                <div class="comment-text">ترد و خوش‌نمک. سسش هم عالیه.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="10">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1562967914-608f82629710?w=500&h=350&fit=crop" alt="ناگت" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">ناگت مرغ</h3>
+            <p class="product-desc">ناگت‌های ترد مرغ با پوشش طلایی، سرو با سس باربیکیو و سس سیر.</p>
+            <div class="product-meta">
+              <div class="product-price">۹۵٬۰۰۰ <span>تومان</span></div>
+              <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span>۴.۶</span>
+              </div>
+            </div>
+            <button class="comment-btn" onclick="toggleForm(this)">
+              <i class="far fa-comment-dots"></i> ثبت نظر
+            </button>
+            <div class="comment-form">
+              <div class="form-group">
+                <label>امتیاز شما</label>
+                <div class="stars-select" data-rating="0">
+                  <i class="far fa-star" data-value="1"></i>
+                  <i class="far fa-star" data-value="2"></i>
+                  <i class="far fa-star" data-value="3"></i>
+                  <i class="far fa-star" data-value="4"></i>
+                  <i class="far fa-star" data-value="5"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>نام شما</label>
+                <input type="text" placeholder="نام شما" class="input-name" />
+              </div>
+              <div class="form-group">
+                <label>نظر شما</label>
+                <textarea placeholder="نظر خود را بنویسید..." class="input-text"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn-submit" onclick="submitComment(this)">ارسال نظر</button>
+                <button class="btn-cancel" onclick="toggleForm(this)">انصراف</button>
+              </div>
+            </div>
+            <div class="comments-list">
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">یاسمن</span>
+                  <span class="comment-stars">★★★★☆</span>
+                </div>
+                <div class="comment-text">آبدار و خوش‌طعم. مقدارش هم خوبه.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="11">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1546793665-c74683f339c1?w=500&h=350&fit=crop" alt="سالاد سزار" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">سالاد سزار</h3>
+            <p class="product-desc">کاهو رومی، نان تست سیر، پنیر پارمزان و سس سزار خانگی با تکه‌های مرغ گریل.</p>
+            <div class="product-meta">
+              <div class="product-price">۱۲۰٬۰۰۰ <span>تومان</span></div>
+              <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span>۴.۸</span>
+              </div>
+            </div>
+            <button class="comment-btn" onclick="toggleForm(this)">
+              <i class="far fa-comment-dots"></i> ثبت نظر
+            </button>
+            <div class="comment-form">
+              <div class="form-group">
+                <label>امتیاز شما</label>
+                <div class="stars-select" data-rating="0">
+                  <i class="far fa-star" data-value="1"></i>
+                  <i class="far fa-star" data-value="2"></i>
+                  <i class="far fa-star" data-value="3"></i>
+                  <i class="far fa-star" data-value="4"></i>
+                  <i class="far fa-star" data-value="5"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>نام شما</label>
+                <input type="text" placeholder="نام شما" class="input-name" />
+              </div>
+              <div class="form-group">
+                <label>نظر شما</label>
+                <textarea placeholder="نظر خود را بنویسید..." class="input-text"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn-submit" onclick="submitComment(this)">ارسال نظر</button>
+                <button class="btn-cancel" onclick="toggleForm(this)">انصراف</button>
+              </div>
+            </div>
+            <div class="comments-list">
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">شایان</span>
+                  <span class="comment-stars">★★★★★</span>
+                </div>
+                <div class="comment-text">سالاد تازه و سسش فوق‌العاده بود.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- MAIN FOOD -->
+    <section class="section" id="main">
+      <h2 class="section-title"><i class="fas fa-hamburger"></i> غذاهای اصلی</h2>
+      <div class="products-grid">
+
+        <div class="product-card" data-id="12">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=500&h=350&fit=crop" alt="پاستا" loading="lazy" />
+            <span class="product-badge">ویژه</span>
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">پاستا آلفردو</h3>
+            <p class="product-desc">پاستای فتوچینی با سس خامه‌ای آلفردو، قارچ و پنیر پارمزان. سرو با نان سیر.</p>
+            <div class="product-meta">
+              <div class="product-price">۱۸۰٬۰۰۰ <span>تومان</span></div>
+              <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span>۴.۹</span>
+              </div>
+            </div>
+            <button class="comment-btn" onclick="toggleForm(this)">
+              <i class="far fa-comment-dots"></i> ثبت نظر
+            </button>
+            <div class="comment-form">
+              <div class="form-group">
+                <label>امتیاز شما</label>
+                <div class="stars-select" data-rating="0">
+                  <i class="far fa-star" data-value="1"></i>
+                  <i class="far fa-star" data-value="2"></i>
+                  <i class="far fa-star" data-value="3"></i>
+                  <i class="far fa-star" data-value="4"></i>
+                  <i class="far fa-star" data-value="5"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>نام شما</label>
+                <input type="text" placeholder="نام شما" class="input-name" />
+              </div>
+              <div class="form-group">
+                <label>نظر شما</label>
+                <textarea placeholder="نظر خود را بنویسید..." class="input-text"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn-submit" onclick="submitComment(this)">ارسال نظر</button>
+                <button class="btn-cancel" onclick="toggleForm(this)">انصراف</button>
+              </div>
+            </div>
+            <div class="comments-list">
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">مهسا</span>
+                  <span class="comment-stars">★★★★★</span>
+                </div>
+                <div class="comment-text">سسش خیلی غلیظ و خوش‌طعمه. پیشنهاد ویژه!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="13">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&h=350&fit=crop" alt="برگر" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">برگر مخصوص توکا</h3>
+            <p class="product-desc">گوشت چرخ‌کرده دست‌ساز، پنیر چدار، کاهو، گوجه و سس مخصوص در نان بریوش تازه.</p>
+            <div class="product-meta">
+              <div class="product-price">۱۵۰٬۰۰۰ <span>تومان</span></div>
+              <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span>۴.۷</span>
+              </div>
+            </div>
+            <button class="comment-btn" onclick="toggleForm(this)">
+              <i class="far fa-comment-dots"></i> ثبت نظر
+            </button>
+            <div class="comment-form">
+              <div class="form-group">
+                <label>امتیاز شما</label>
+                <div class="stars-select" data-rating="0">
+                  <i class="far fa-star" data-value="1"></i>
+                  <i class="far fa-star" data-value="2"></i>
+                  <i class="far fa-star" data-value="3"></i>
+                  <i class="far fa-star" data-value="4"></i>
+                  <i class="far fa-star" data-value="5"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>نام شما</label>
+                <input type="text" placeholder="نام شما" class="input-name" />
+              </div>
+              <div class="form-group">
+                <label>نظر شما</label>
+                <textarea placeholder="نظر خود را بنویسید..." class="input-text"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn-submit" onclick="submitComment(this)">ارسال نظر</button>
+                <button class="btn-cancel" onclick="toggleForm(this)">انصراف</button>
+              </div>
+            </div>
+            <div class="comments-list">
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">آرش</span>
+                  <span class="comment-stars">★★★★★</span>
+                </div>
+                <div class="comment-text">گوشتش آبدار و نانش تازه. یکی از بهترین برگرها.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="14">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=500&h=350&fit=crop" alt="ساندویچ" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">ساندویچ کلاب</h3>
+            <p class="product-desc">لایه‌های مرغ گریل، بیکن، تخم‌مرغ، کاهو و گوجه در نان تست با سیب‌زمینی کنار.</p>
+            <div class="product-meta">
+              <div class="product-price">۱۳۰٬۰۰۰ <span>تومان</span></div>
+              <div class="product-rating">
+                <span class="stars">★★★★☆</span>
+                <span>۴.۵</span>
+              </div>
+            </div>
+            <button class="comment-btn" onclick="toggleForm(this)">
+              <i class="far fa-comment-dots"></i> ثبت نظر
+            </button>
+            <div class="comment-form">
+              <div class="form-group">
+                <label>امتیاز شما</label>
+                <div class="stars-select" data-rating="0">
+                  <i class="far fa-star" data-value="1"></i>
+                  <i class="far fa-star" data-value="2"></i>
+                  <i class="far fa-star" data-value="3"></i>
+                  <i class="far fa-star" data-value="4"></i>
+                  <i class="far fa-star" data-value="5"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>نام شما</label>
+                <input type="text" placeholder="نام شما" class="input-name" />
+              </div>
+              <div class="form-group">
+                <label>نظر شما</label>
+                <textarea placeholder="نظر خود را بنویسید..." class="input-text"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn-submit" onclick="submitComment(this)">ارسال نظر</button>
+                <button class="btn-cancel" onclick="toggleForm(this)">انصراف</button>
+              </div>
+            </div>
+            <div class="comments-list">
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">دانیال</span>
+                  <span class="comment-stars">★★★★☆</span>
+                </div>
+                <div class="comment-text">سیرکننده و خوش‌طعم. سیب‌زمینی کنارش هم خوب بود.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- DESSERTS -->
+    <section class="section" id="dessert">
+      <h2 class="section-title"><i class="fas fa-ice-cream"></i> دسرها</h2>
+      <div class="products-grid">
+
+        <div class="product-card" data-id="15">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=500&h=350&fit=crop" alt="چیزکیک" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">چیزکیک نیویورکی</h3>
+            <p class="product-desc">چیزکیک خامه‌ای کلاسیک با پایه بیسکویت و سس توت‌فرنگی تازه رویه.</p>
+            <div class="product-meta">
+              <div class="product-price">۹۵٬۰۰۰ <span>تومان</span></div>
+              <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span>۴.۹</span>
+              </div>
+            </div>
+            <button class="comment-btn" onclick="toggleForm(this)">
+              <i class="far fa-comment-dots"></i> ثبت نظر
+            </button>
+            <div class="comment-form">
+              <div class="form-group">
+                <label>امتیاز شما</label>
+                <div class="stars-select" data-rating="0">
+                  <i class="far fa-star" data-value="1"></i>
+                  <i class="far fa-star" data-value="2"></i>
+                  <i class="far fa-star" data-value="3"></i>
+                  <i class="far fa-star" data-value="4"></i>
+                  <i class="far fa-star" data-value="5"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>نام شما</label>
+                <input type="text" placeholder="نام شما" class="input-name" />
+              </div>
+              <div class="form-group">
+                <label>نظر شما</label>
+                <textarea placeholder="نظر خود را بنویسید..." class="input-text"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn-submit" onclick="submitComment(this)">ارسال نظر</button>
+                <button class="btn-cancel" onclick="toggleForm(this)">انصراف</button>
+              </div>
+            </div>
+            <div class="comments-list">
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">نرگس</span>
+                  <span class="comment-stars">★★★★★</span>
+                </div>
+                <div class="comment-text">بافت خامه‌ای و طعم بی‌نظیر. یکی از بهترین چیزکیک‌ها.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="16">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=500&h=350&fit=crop" alt="براونی" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">براونی شکلاتی</h3>
+            <p class="product-desc">براونی نرم و شکلاتی با تکه‌های شکلات داخل، سرو با بستنی وانیلی.</p>
+            <div class="product-meta">
+              <div class="product-price">۷۰٬۰۰۰ <span>تومان</span></div>
+              <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span>۴.۸</span>
+              </div>
+            </div>
+            <button class="comment-btn" onclick="toggleForm(this)">
+              <i class="far fa-comment-dots"></i> ثبت نظر
+            </button>
+            <div class="comment-form">
+              <div class="form-group">
+                <label>امتیاز شما</label>
+                <div class="stars-select" data-rating="0">
+                  <i class="far fa-star" data-value="1"></i>
+                  <i class="far fa-star" data-value="2"></i>
+                  <i class="far fa-star" data-value="3"></i>
+                  <i class="far fa-star" data-value="4"></i>
+                  <i class="far fa-star" data-value="5"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>نام شما</label>
+                <input type="text" placeholder="نام شما" class="input-name" />
+              </div>
+              <div class="form-group">
+                <label>نظر شما</label>
+                <textarea placeholder="نظر خود را بنویسید..." class="input-text"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn-submit" onclick="submitComment(this)">ارسال نظر</button>
+                <button class="btn-cancel" onclick="toggleForm(this)">انصراف</button>
+              </div>
+            </div>
+            <div class="comments-list">
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">پوریا</span>
+                  <span class="comment-stars">★★★★★</span>
+                </div>
+                <div class="comment-text">شکلاتش غلیظ و نرم. با بستنی ترکیب فوق‌العاده‌ای می‌شه.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="17">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=500&h=350&fit=crop" alt="تیرامیسو" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">تیرامیسو</h3>
+            <p class="product-desc">دسر ایتالیایی کلاسیک با لایه‌های لیدی‌فینگر آغشته به قهوه و کرم ماسکارپونه.</p>
+            <div class="product-meta">
+              <div class="product-price">۱۱۰٬۰۰۰ <span>تومان</span></div>
+              <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span>۴.۹</span>
+              </div>
+            </div>
+            <button class="comment-btn" onclick="toggleForm(this)">
+              <i class="far fa-comment-dots"></i> ثبت نظر
+            </button>
+            <div class="comment-form">
+              <div class="form-group">
+                <label>امتیاز شما</label>
+                <div class="stars-select" data-rating="0">
+                  <i class="far fa-star" data-value="1"></i>
+                  <i class="far fa-star" data-value="2"></i>
+                  <i class="far fa-star" data-value="3"></i>
+                  <i class="far fa-star" data-value="4"></i>
+                  <i class="far fa-star" data-value="5"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>نام شما</label>
+                <input type="text" placeholder="نام شما" class="input-name" />
+              </div>
+              <div class="form-group">
+                <label>نظر شما</label>
+                <textarea placeholder="نظر خود را بنویسید..." class="input-text"></textarea>
+              </div>
+              <div class="form-actions">
+                <button class="btn-submit" onclick="submitComment(this)">ارسال نظر</button>
+                <button class="btn-cancel" onclick="toggleForm(this)">انصراف</button>
+              </div>
+            </div>
+            <div class="comments-list">
+              <div class="comment-item">
+                <div class="comment-header">
+                  <span class="comment-author">فرناز</span>
+                  <span class="comment-stars">★★★★★</span>
+                </div>
+                <div class="comment-text">طعم قهوه و کرمش بی‌نظیره. خیلی نزدیک به اصل ایتالیایی.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-logo">توکا | Two Ka</div>
+    <p>با عشق از کافه توکا</p>
+    <p style="margin-top: 8px;">
+      <a href="https://two-ka.ir" target="_blank">two-ka.ir</a>
+    </p>
+    <p style="margin-top: 12px; font-size: 0.8rem; opacity: 0.7;">ساعت کاری: ۱۰ صبح تا ۱۱ شب</p>
+  </footer>
+
+  <script>
+    // ========== OPEN / CLOSED STATUS ==========
+    function checkCafeStatus() {
+      const now = new Date();
+      const hour = now.getHours();
+      // ساعت کاری: ۱۰ صبح تا ۲۳ (۱۱ شب)
+      const isOpen = hour >= 10 && hour < 23;
+
+      const statusDot = document.getElementById('statusDot');
+      const statusText = document.getElementById('statusText');
+
+      if (isOpen) {
+        statusDot.classList.add('open');
+        statusDot.classList.remove('closed');
+        statusText.textContent = 'باز است';
+        statusText.style.color = '#2ecc71';
+      } else {
+        statusDot.classList.add('closed');
+        statusDot.classList.remove('open');
+        statusText.textContent = 'تعطیل است';
+        statusText.style.color = '#e74c3c';
+      }
+    }
+
+    checkCafeStatus();
+    // هر دقیقه چک کن
+    setInterval(checkCafeStatus, 60000);
+
+    // ========== CATEGORY NAVIGATION ==========
+    const navBtns = document.querySelectorAll('.nav-btn');
+    const sections = document.querySelectorAll('.section');
+
+    navBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+        const target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        navBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // Active nav on scroll
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -60% 0px',
+      threshold: 0
+    };
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          navBtns.forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('data-target') === id);
+          });
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(section => sectionObserver.observe(section));
+
+    // ========== PRODUCT CARD ANIMATION ==========
+    const cards = document.querySelectorAll('.product-card');
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, index * 80);
+          cardObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    cards.forEach(card => cardObserver.observe(card));
+
+    // ========== COMMENT FORM TOGGLE ==========
+    function toggleForm(btn) {
+      const card = btn.closest('.product-card');
+      const form = card.querySelector('.comment-form');
+      const isOpen = form.classList.contains('show');
+
+      // بستن همه فرم‌های باز
+      document.querySelectorAll('.comment-form.show').forEach(f => f.classList.remove('show'));
+
+      if (!isOpen) {
+        form.classList.add('show');
+        // فوکوس روی نام
+        setTimeout(() => {
+          const nameInput = form.querySelector('.input-name');
+          if (nameInput) nameInput.focus();
+        }, 100);
+      }
+    }
+
+    // ========== STAR RATING SELECT ==========
+    document.querySelectorAll('.stars-select').forEach(container => {
+      const stars = container.querySelectorAll('i');
+      stars.forEach(star => {
+        star.addEventListener('click', () => {
+          const value = parseInt(star.getAttribute('data-value'));
+          container.setAttribute('data-rating', value);
+          stars.forEach((s, i) => {
+            if (i < value) {
+              s.classList.remove('far');
+              s.classList.add('fas', 'active');
+            } else {
+              s.classList.remove('fas', 'active');
+              s.classList.add('far');
+            }
+          });
+        });
+
+        star.addEventListener('mouseenter', () => {
+          const value = parseInt(star.getAttribute('data-value'));
+          stars.forEach((s, i) => {
+            if (i < value) {
+              s.classList.add('active');
+            } else {
+              s.classList.remove('active');
+            }
+          });
+        });
+      });
+
+      container.addEventListener('mouseleave', () => {
+        const current = parseInt(container.getAttribute('data-rating')) || 0;
+        stars.forEach((s, i) => {
+          if (i < current) {
+            s.classList.add('active');
+            s.classList.remove('far');
+            s.classList.add('fas');
+          } else {
+            s.classList.remove('active', 'fas');
+            s.classList.add('far');
+          }
+        });
+      });
+    });
+
+    // ========== SUBMIT COMMENT (Client-side demo) ==========
+    function submitComment(btn) {
+      const form = btn.closest('.comment-form');
+      const card = btn.closest('.product-card');
+      const nameInput = form.querySelector('.input-name');
+      const textInput = form.querySelector('.input-text');
+      const starsContainer = form.querySelector('.stars-select');
+      const rating = parseInt(starsContainer.getAttribute('data-rating')) || 0;
+
+      const name = nameInput.value.trim();
+      const text = textInput.value.trim();
+
+      if (!name) {
+        alert('لطفاً نام خود را وارد کنید.');
+        nameInput.focus();
+        return;
+      }
+      if (rating === 0) {
+        alert('لطفاً امتیاز خود را انتخاب کنید.');
+        return;
+      }
+      if (!text) {
+        alert('لطفاً متن نظر خود را بنویسید.');
+        textInput.focus();
+        return;
+      }
+
+      // ساخت ستاره‌ها
+      let starsHtml = '';
+      for (let i = 1; i <= 5; i++) {
+        starsHtml += i <= rating ? '★' : '☆';
+      }
+
+      // اضافه کردن کامنت جدید
+      const commentsList = card.querySelector('.comments-list');
+      const newComment = document.createElement('div');
+      newComment.className = 'comment-item';
+      newComment.innerHTML = `
+        <div class="comment-header">
+          <span class="comment-author">${escapeHtml(name)}</span>
+          <span class="comment-stars">${starsHtml}</span>
+        </div>
+        <div class="comment-text">${escapeHtml(text)}</div>
+      `;
+      commentsList.insertBefore(newComment, commentsList.firstChild);
+
+      // پاک کردن فرم
+      nameInput.value = '';
+      textInput.value = '';
+      starsContainer.setAttribute('data-rating', '0');
+      starsContainer.querySelectorAll('i').forEach(s => {
+        s.classList.remove('fas', 'active');
+        s.classList.add('far');
+      });
+
+      // بستن فرم
+      form.classList.remove('show');
+
+      // پیام موفقیت موقت
+      const successMsg = document.createElement('div');
+      successMsg.style.cssText = 'text-align:center;color:#2ecc71;font-size:0.9rem;padding:8px;margin-bottom:8px;';
+      successMsg.textContent = 'نظر شما با موفقیت ثبت شد ✓';
+      commentsList.parentNode.insertBefore(successMsg, commentsList);
+      setTimeout(() => successMsg.remove(), 2500);
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // جلوگیری از ارسال فرم با اینتر در اینپوت‌ها
+    document.querySelectorAll('.comment-form input, .comment-form textarea').forEach(el => {
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && el.tagName !== 'TEXTAREA') {
+          e.preventDefault();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
