@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="منوی دیجیتال کافه توکا | Two Ka - سفارش آنلاین" />
+  <title>منوی دیجیتال توکا | Two Ka</title>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <!-- Vazirmatn Font -->
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+  
+  <style>
+    :root {
+      --gold: #d4af37;
+      --gold-light: #f0d77b;
+      --gold-dark: #b8962e;
+      --bg-dark: #0d0d0d;
+      --bg-card: #161616;
+      --bg-card-hover: #1c1c1c;
+      --text: #f5f5f5;
+      --text-muted: #a0a0a0;
+      --success: #2ecc71;
+      --danger: #e74c3c;
+      --border: rgba(212, 175, 55, 0.25);
+      --shadow-gold: 0 8px 32px rgba(212, 175, 55, 0.15);
+      --radius: 16px;
+      --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 100px; /* space for floating buttons */
+    }
+
+    /* ========== HEADER ========== */
+    .header {
+      position: relative;
+      background: linear-gradient(135deg, #0d0d0d 0%, #1a1508 50%, #0d0d0d 100%);
+      padding: 24px 20px 18px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 40%, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .logo-area {
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-en {
+      font-size: 0.9rem;
+      letter-spacing: 4px;
+      color: var(--gold);
+      font-weight: 500;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+      opacity: 0.9;
+    }
+
+    .logo-fa {
+      font-size: 2.4rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--gold-light), var(--gold), var(--gold-dark));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+      letter-spacing: -1px;
+    }
+
+    .tagline {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .status-bar {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+      padding: 7px 16px;
+      border-radius: 50px;
+      font-size: 0.88rem;
+      margin-bottom: 12px;
+      backdrop-filter: blur(8px);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .status-dot.open {
+      background: var(--success);
+      box-shadow: 0 0 10px var(--success);
+    }
+
+    .status-dot.closed {
+      background: var(--danger);
+      box-shadow: 0 0 10px var(--danger);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.9); }
+    }
+
+    .table-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(212, 175, 55, 0.15);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 5px 14px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .table-badge.missing {
+      border-color: var(--danger);
+      color: var(--danger);
+      background: rgba(231, 76, 60, 0.1);
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .social-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--border);
+      color: var(--gold);
+      font-size: 1.1rem;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .social-links a:hover {
+      background: var(--gold);
+      color: #0d0d0d;
+      transform: translateY(-3px) scale(1.08);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    }
+
+    /* ========== CATEGORY NAV ========== */
+    .category-nav {
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      background: rgba(13, 13, 13, 0.94);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .category-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-inner {
+      display: flex;
+      gap: 8px;
+      padding: 0 14px;
+      width: max-content;
+      margin: 0 auto;
+    }
+
+    .nav-btn {
+      flex-shrink: 0;
+      padding: 9px 18px;
+      border-radius: 50px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #0d0d0d;
+      border-color: transparent;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
+    }
+
+    /* ========== MAIN ========== */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 14px 40px;
+    }
+
+    .section {
+      margin-bottom: 42px;
+      scroll-margin-top: 70px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-title i {
+      font-size: 1.15rem;
+      opacity: 0.9;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    @media (min-width: 560px) {
+      .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 900px) {
+      .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* ========== PRODUCT CARD ========== */
+    .product-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: var(--transition);
+      opacity: 0;
+      transform: translateY(24px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(212, 175, 55, 0.5);
+      box-shadow: var(--shadow-gold);
+      background: var(--bg-card-hover);
+    }
+
+    .product-img-wrap {
+      position: relative;
+      width: 100%;
+      height: 180px;
+      overflow: hidden;
+    }
+
+    .product-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.55s ease;
+    }
+
+    .product-card:hover .product-img {
+      transform: scale(1.07);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #0d0d0d;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .product-body {
+      padding: 14px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .product-name {
+      font-size: 1.08rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .product-desc {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      flex-grow: 1;
+      line-height: 1.55;
+    }
+
+    .product-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .product-price {
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: var(--gold);
+      white-space: nowrap;
+    }
+
+    .product-price span {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-right: 3px;
+    }
+
+    .add-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #0d0d0d;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .add-btn:hover {
+      filter: brightness(1.12);
+      transform: scale(1.04);
+      box-shadow: 0 4px 14px rgba(212, 175, 55, 0.4);
+    }
+
+    .add-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* ========== FLOATING ACTION BUTTONS ========== */
+    .fab-container {
+      position: fixed;
+      bottom: 22px;
+      left: 18px;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .fab {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border-radius: 50px;
+      border: none;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+      position: relative;
+    }
+
+    .fab-cart {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #0d0d0d;
+    }
+
+    .fab-cart:hover {
+      filter: brightness(1.1);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(212, 175, 55, 0.45);
+    }
+
+    .fab-barista {
+      background: #1a1a1a;
+      color: var(--gold);
+      border: 1px solid var(--border);
+    }
+
+    .fab-barista:hover {
+      background: rgba(212, 175, 55, 0.12);
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: var(--danger);
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+      min-width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--bg-dark);
+      padding: 0 5px;
+    }
+
+    .cart-badge.hidden {
+      display: none;
+    }
+
+    /* ========== CART DRAWER ========== */
+    .cart-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 300;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .cart-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      max-width: 420px;
+      height: 100%;
+      background: #121212;
+      z-index: 310;
+      transform: translateX(-100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+    }
+
+    .cart-drawer.open {
+      transform: translateX(0);
+    }
+
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      background: #0d0d0d;
+    }
+
+    .cart-header h2 {
+      font-size: 1.2rem;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cart-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 4px;
+      transition: color 0.2s;
+    }
+
+    .cart-close:hover {
+      color: var(--text);
+    }
+
+    .cart-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .cart-empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+
+    .cart-empty i {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      opacity: 0.4;
+      color: var(--gold);
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .cart-item-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cart-item-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cart-item-price {
+      color: var(--gold);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .cart-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .qty-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .qty-btn:hover {
+      background: rgba(212, 175, 55, 0.15);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .qty-value {
+      min-width: 24px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .remove-item {
+      background: transparent;
+      border: none;
+      color: var(--danger);
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 4px;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+
+    .remove-item:hover {
+      opacity: 1;
+    }
+
+    .cart-footer {
+      padding: 16px 20px 24px;
+      border-top: 1px solid var(--border);
+      background: #0d0d0d;
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      font-size: 1.1rem;
+    }
+
+    .cart-total strong {
+      color: var(--gold);
+      font-size: 1.25rem;
+    }
+
+    .btn-order {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #0d0d0d;
+      border: none;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-order:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    }
+
+    .btn-order:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      filter: none;
+    }
+
+    /* ========== TOAST ========== */
+    .toast {
+      position: fixed;
+      bottom: 110px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1a1a1a;
+      border: 1px solid var(--gold);
+      color: var(--text);
+      padding: 12px 22px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      z-index: 400;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.success {
+      border-color: var(--success);
+    }
+
+    .toast.error {
+      border-color: var(--danger);
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      text-align: center;
+      padding: 24px 20px;
+      border-top: 1px solid var(--border);
+      background: #0a0a0a;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+
+    .footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-logo {
+      font-size: 1.05rem;
+      color: var(--gold);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #111;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--gold-dark);
+      border-radius: 3px;
+    }
+
+    /* Loading spinner for buttons */
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: #0d0d0d;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-area">
+      <div class="logo-en">TWO KA</div>
+      <div class="logo-fa">توکا</div>
+      <p class="tagline">تجربه‌ای متفاوت از طعم و کیفیت</p>
+      
+      <div class="status-bar">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">در حال بررسی وضعیت...</span>
+      </div>
+
+      <div id="tableInfo" class="table-badge missing" style="display:none;">
+        <i class="fas fa-chair"></i>
+        <span id="tableText">میز مشخص نیست</span>
+      </div>
+
+      <div class="social-links">
+        <a href="https://instagram.com/two.ka" target="_blank" rel="noopener" title="اینستاگرام" aria-label="اینستاگرام">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://t.me/two_ka" target="_blank" rel="noopener" title="تلگرام" aria-label="تلگرام">
+          <i class="fab fa-telegram-plane"></i>
+        </a>
+        <a href="https://two-ka.ir" target="_blank" rel="noopener" title="وب‌سایت" aria-label="وب‌سایت">
+          <i class="fas fa-globe"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- CATEGORY NAV -->
+  <nav class="category-nav" id="categoryNav">
+    <div class="nav-inner">
+      <button class="nav-btn active" data-target="hot">نوشیدنی گرم</button>
+      <button class="nav-btn" data-target="cold">نوشیدنی سرد</button>
+      <button class="nav-btn" data-target="appetizer">پیش‌غذا</button>
+      <button class="nav-btn" data-target="main">غذای اصلی</button>
+      <button class="nav-btn" data-target="dessert">دسر</button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- HOT DRINKS -->
+    <section class="section" id="hot">
+      <h2 class="section-title"><i class="fas fa-mug-hot"></i> نوشیدنی‌های گرم</h2>
+      <div class="products-grid">
+
+        <div class="product-card" data-id="1" data-name="اسپرسو" data-price="45000">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&h=350&fit=crop" alt="اسپرسو" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">اسپرسو</h3>
+            <p class="product-desc">شات خالص قهوه ایتالیایی با عطر غنی و کرمای مخملی.</p>
+            <div class="product-footer">
+              <div class="product-price">۴۵٬۰۰۰ <span>تومان</span></div>
+              <button class="add-btn" onclick="addToCart(this)">
+                <i class="fas fa-plus"></i> افزودن
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="2" data-name="لاته" data-price="65000">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1572442388796-11668a47ed91?w=500&h=350&fit=crop" alt="لاته" loading="lazy" />
+            <span class="product-badge">محبوب</span>
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">لاته</h3>
+            <p class="product-desc">ترکیب نرم اسپرسو با شیر بخار داده شده و فوم مخملی.</p>
+            <div class="product-footer">
+              <div class="product-price">۶۵٬۰۰۰ <span>تومان</span></div>
+              <button class="add-btn" onclick="addToCart(this)">
+                <i class="fas fa-plus"></i> افزودن
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="3" data-name="کاپوچینو" data-price="60000">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1534778101976-628585759c4a?w=500&h=350&fit=crop" alt="کاپوچینو" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">کاپوچینو</h3>
+            <p class="product-desc">اسپرسو، شیر و فوم غلیظ با نسبت کلاسیک ایتالیایی.</p>
+            <div class="product-footer">
+              <div class="product-price">۶۰٬۰۰۰ <span>تومان</span></div>
+              <button class="add-btn" onclick="addToCart(this)">
+                <i class="fas fa-plus"></i> افزودن
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="4" data-name="هات چاکلت" data-price="55000">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1511920170033-f8396924c348?w=500&h=350&fit=crop" alt="هات چاکلت" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">هات چاکلت</h3>
+            <p class="product-desc">شکلات تلخ بلژیکی ذوب‌شده با شیر داغ و خامه.</p>
+            <div class="product-footer">
+              <div class="product-price">۵۵٬۰۰۰ <span>تومان</span></div>
+              <button class="add-btn" onclick="addToCart(this)">
+                <i class="fas fa-plus"></i> افزودن
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- COLD DRINKS -->
+    <section class="section" id="cold">
+      <h2 class="section-title"><i class="fas fa-snowflake"></i> نوشیدنی‌های سرد</h2>
+      <div class="products-grid">
+
+        <div class="product-card" data-id="5" data-name="آیس لاته" data-price="70000">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=500&h=350&fit=crop" alt="آیس لاته" loading="lazy" />
+            <span class="product-badge">پرفروش</span>
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">آیس لاته</h3>
+            <p class="product-desc">اسپرسو سرد روی شیر یخ‌زده با یخ فراوان.</p>
+            <div class="product-footer">
+              <div class="product-price">۷۰٬۰۰۰ <span>تومان</span></div>
+              <button class="add-btn" onclick="addToCart(this)">
+                <i class="fas fa-plus"></i> افزودن
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="6" data-name="آیس موکا" data-price="75000">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=500&h=350&fit=crop" alt="آیس موکا" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">آیس موکا</h3>
+            <p class="product-desc">ترکیب اسپرسو، شکلات و شیر سرد با یخ.</p>
+            <div class="product-footer">
+              <div class="product-price">۷۵٬۰۰۰ <span>تومان</span></div>
+              <button class="add-btn" onclick="addToCart(this)">
+                <i class="fas fa-plus"></i> افزودن
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="7" data-name="لیموناد خانگی" data-price="45000">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1622597467836-f3285f2131b8?w=500&h=350&fit=crop" alt="لیموناد" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">لیموناد خانگی</h3>
+            <p class="product-desc">آب لیمو تازه، نعناع و کمی شکر با یخ فراوان.</p>
+            <div class="product-footer">
+              <div class="product-price">۴۵٬۰۰۰ <span>تومان</span></div>
+              <button class="add-btn" onclick="addToCart(this)">
+                <i class="fas fa-plus"></i> افزودن
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="8" data-name="اسموتی میوه‌ای" data-price="90000">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1505252585461-04db1eb84625?w=500&h=350&fit=crop" alt="اسموتی" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">اسموتی میوه‌ای</h3>
+            <p class="product-desc">مخلوط موز، توت‌فرنگی و انبه با ماست یونانی.</p>
+            <div class="product-footer">
+              <div class="product-price">۹۰٬۰۰۰ <span>تومان</span></div>
+              <button class="add-btn" onclick="addToCart(this)">
+                <i class="fas fa-plus"></i> افزودن
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- APPETIZERS -->
+    <section class="section" id="appetizer">
+      <h2 class="section-title"><i class="fas fa-utensils"></i> پیش‌غذاها</h2>
+      <div class="products-grid">
+
+        <div class="product-card" data-id="9" data-name="سیب‌زمینی سرخ‌کرده" data-price="85000">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500&h=350&fit=crop" alt="سیب‌زمینی" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">سیب‌زمینی سرخ‌کرده</h3>
+            <p class="product-desc">سیب‌زمینی تازه با ادویه‌جات مخصوص خانه و سس توکا.</p>
+            <div class="product-footer">
+              <div class="product-price">۸۵٬۰۰۰ <span>تومان</span></div>
+              <button class="add-btn" onclick="addToCart(this)">
+                <i class="fas fa-plus"></i> افزودن
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="10" data-name="ناگت مرغ" data-price="95000">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1562967914-608f82629710?w=500&h=350&fit=crop" alt="ناگت" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">ناگت مرغ</h3>
+            <p class="product-desc">ناگت‌های ترد مرغ با پوشش طلایی، سرو با سس باربیکیو.</p>
+            <div class="product-footer">
+              <div class="product-price">۹۵٬۰۰۰ <span>تومان</span></div>
+              <button class="add-btn" onclick="addToCart(this)">
+                <i class="fas fa-plus"></i> افزودن
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="11" data-name="سالاد سزار" data-price="120000">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1546793665-c74683f339c1?w=500&h=350&fit=crop" alt="سالاد سزار" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">سالاد سزار</h3>
+            <p class="product-desc">کاهو رومی، نان تست سیر، پنیر پارمزان و مرغ گریل.</p>
+            <div class="product-footer">
+              <div class="product-price">۱۲۰٬۰۰۰ <span>تومان</span></div>
+              <button class="add-btn" onclick="addToCart(this)">
+                <i class="fas fa-plus"></i> افزودن
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- MAIN FOOD -->
+    <section class="section" id="main">
+      <h2 class="section-title"><i class="fas fa-hamburger"></i> غذاهای اصلی</h2>
+      <div class="products-grid">
+
+        <div class="product-card" data-id="12" data-name="پاستا آلفردو" data-price="180000">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=500&h=350&fit=crop" alt="پاستا" loading="lazy" />
+            <span class="product-badge">ویژه</span>
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">پاستا آلفردو</h3>
+            <p class="product-desc">پاستای فتوچینی با سس خامه‌ای آلفردو، قارچ و پنیر پارمزان.</p>
+            <div class="product-footer">
+              <div class="product-price">۱۸۰٬۰۰۰ <span>تومان</span></div>
+              <button class="add-btn" onclick="addToCart(this)">
+                <i class="fas fa-plus"></i> افزودن
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="13" data-name="برگر مخصوص توکا" data-price="150000">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&h=350&fit=crop" alt="برگر" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">برگر مخصوص توکا</h3>
+            <p class="product-desc">گوشت دست‌ساز، پنیر چدار، کاهو و سس مخصوص در نان بریوش.</p>
+            <div class="product-footer">
+              <div class="product-price">۱۵۰٬۰۰۰ <span>تومان</span></div>
+              <button class="add-btn" onclick="addToCart(this)">
+                <i class="fas fa-plus"></i> افزودن
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="14" data-name="ساندویچ کلاب" data-price="130000">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=500&h=350&fit=crop" alt="ساندویچ" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">ساندویچ کلاب</h3>
+            <p class="product-desc">مرغ گریل، بیکن، تخم‌مرغ، کاهو و گوجه با سیب‌زمینی کنار.</p>
+            <div class="product-footer">
+              <div class="product-price">۱۳۰٬۰۰۰ <span>تومان</span></div>
+              <button class="add-btn" onclick="addToCart(this)">
+                <i class="fas fa-plus"></i> افزودن
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- DESSERTS -->
+    <section class="section" id="dessert">
+      <h2 class="section-title"><i class="fas fa-ice-cream"></i> دسرها</h2>
+      <div class="products-grid">
+
+        <div class="product-card" data-id="15" data-name="چیزکیک نیویورکی" data-price="95000">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=500&h=350&fit=crop" alt="چیزکیک" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">چیزکیک نیویورکی</h3>
+            <p class="product-desc">چیزکیک خامه‌ای کلاسیک با پایه بیسکویت و سس توت‌فرنگی.</p>
+            <div class="product-footer">
+              <div class="product-price">۹۵٬۰۰۰ <span>تومان</span></div>
+              <button class="add-btn" onclick="addToCart(this)">
+                <i class="fas fa-plus"></i> افزودن
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="16" data-name="براونی شکلاتی" data-price="70000">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=500&h=350&fit=crop" alt="براونی" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">براونی شکلاتی</h3>
+            <p class="product-desc">براونی نرم و شکلاتی با تکه‌های شکلات، سرو با بستنی وانیلی.</p>
+            <div class="product-footer">
+              <div class="product-price">۷۰٬۰۰۰ <span>تومان</span></div>
+              <button class="add-btn" onclick="addToCart(this)">
+                <i class="fas fa-plus"></i> افزودن
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card" data-id="17" data-name="تیرامیسو" data-price="110000">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=500&h=350&fit=crop" alt="تیرامیسو" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">تیرامیسو</h3>
+            <p class="product-desc">دسر ایتالیایی کلاسیک با لایه‌های لیدی‌فینگر و کرم ماسکارپونه.</p>
+            <div class="product-footer">
+              <div class="product-price">۱۱۰٬۰۰۰ <span>تومان</span></div>
+              <button class="add-btn" onclick="addToCart(this)">
+                <i class="fas fa-plus"></i> افزودن
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-logo">توکا | Two Ka</div>
+    <p>با عشق از کافه توکا</p>
+    <p style="margin-top: 6px;">
+      <a href="https://two-ka.ir" target="_blank">two-ka.ir</a>
+    </p>
+    <p style="margin-top: 10px; font-size: 0.78rem; opacity: 0.7;">ساعت کاری: ۱۰ صبح تا ۱۱ شب</p>
+  </footer>
+
+  <!-- FLOATING BUTTONS -->
+  <div class="fab-container">
+    <button class="fab fab-barista" onclick="requestBarista()" id="baristaBtn">
+      <i class="fas fa-bell"></i>
+      <span>باریستا</span>
+    </button>
+    <button class="fab fab-cart" onclick="openCart()">
+      <i class="fas fa-shopping-bag"></i>
+      <span>سبد خرید</span>
+      <span class="cart-badge hidden" id="cartBadge">0</span>
+    </button>
+  </div>
+
+  <!-- CART OVERLAY + DRAWER -->
+  <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h2><i class="fas fa-shopping-bag"></i> سبد خرید</h2>
+      <button class="cart-close" onclick="closeCart()" aria-label="بستن">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="cart-body" id="cartBody">
+      <!-- items rendered by JS -->
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>جمع کل:</span>
+        <strong id="cartTotal">۰ تومان</strong>
+      </div>
+      <button class="btn-order" id="orderBtn" onclick="submitOrder()">
+        <i class="fas fa-check"></i>
+        ثبت سفارش
+      </button>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // =====================================================
+    // تنظیمات API - این آدرس‌ها را با بک‌اند خودت عوض کن
+    // =====================================================
+    const API = {
+      order: '/api/order',          // POST → انتظار دارد { redirect_url: "..." } برگرداند
+      barista: '/api/barista'       // POST → درخواست باریستا
+    };
+
+    // =====================================================
+    // خواندن شماره میز از کوئری استرینگ
+    // مثال: 2-ka.ir/menu?table=4
+    // =====================================================
+    const urlParams = new URLSearchParams(window.location.search);
+    const tableNumber = urlParams.get('table');
+
+    // نمایش شماره میز
+    const tableInfo = document.getElementById('tableInfo');
+    const tableText = document.getElementById('tableText');
+    if (tableNumber) {
+      tableInfo.style.display = 'inline-flex';
+      tableInfo.classList.remove('missing');
+      tableText.textContent = `میز شماره ${tableNumber}`;
+    } else {
+      tableInfo.style.display = 'inline-flex';
+      tableText.textContent = 'شماره میز مشخص نیست';
+    }
+
+    // =====================================================
+    // سبد خرید (جدا برای هر میز با localStorage)
+    // =====================================================
+    const cartKey = tableNumber ? `cart_table_${tableNumber}` : 'cart_no_table';
+    let cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
+
+    function saveCart() {
+      localStorage.setItem(cartKey, JSON.stringify(cart));
+      updateCartBadge();
+    }
+
+    function updateCartBadge() {
+      const badge = document.getElementById('cartBadge');
+      const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
+      if (totalQty > 0) {
+        badge.textContent = totalQty;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function formatPrice(num) {
+      return num.toLocaleString('fa-IR') + ' تومان';
+    }
+
+    // =====================================================
+    // افزودن به سبد
+    // =====================================================
+    function addToCart(btn) {
+      if (!tableNumber) {
+        showToast('ابتدا از طریق لینک میز وارد شوید (مثال: ?table=4)', 'error');
+        return;
+      }
+
+      const card = btn.closest('.product-card');
+      const id = card.dataset.id;
+      const name = card.dataset.name;
+      const price = parseInt(card.dataset.price, 10);
+
+      const existing = cart.find(item => item.id === id);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({ id, name, price, quantity: 1 });
+      }
+
+      saveCart();
+      showToast(`${name} به سبد اضافه شد`, 'success');
+
+      // انیمیشن دکمه
+      btn.innerHTML = '<i class="fas fa-check"></i> اضافه شد';
+      setTimeout(() => {
+        btn.innerHTML = '<i class="fas fa-plus"></i> افزودن';
+      }, 900);
+    }
+
+    // =====================================================
+    // مدیریت سبد (باز / بستن / رندر)
+    // =====================================================
+    function openCart() {
+      renderCart();
+      document.getElementById('cartOverlay').classList.add('open');
+      document.getElementById('cartDrawer').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCart() {
+      document.getElementById('cartOverlay').classList.remove('open');
+      document.getElementById('cartDrawer').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function renderCart() {
+      const body = document.getElementById('cartBody');
+      const totalEl = document.getElementById('cartTotal');
+      const orderBtn = document.getElementById('orderBtn');
+
+      if (cart.length === 0) {
+        body.innerHTML = `
+          <div class="cart-empty">
+            <i class="fas fa-shopping-bag"></i>
+            <p>سبد خرید شما خالی است</p>
+          </div>
+        `;
+        totalEl.textContent = '۰ تومان';
+        orderBtn.disabled = true;
+        return;
+      }
+
+      orderBtn.disabled = false;
+
+      let html = '';
+      let total = 0;
+
+      cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        html += `
+          <div class="cart-item">
+            <div class="cart-item-info">
+              <div class="cart-item-name">${item.name}</div>
+              <div class="cart-item-price">${formatPrice(itemTotal)}</div>
+            </div>
+            <div class="cart-item-actions">
+              <button class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
+              <span class="qty-value">${item.quantity}</span>
+              <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+              <button class="remove-item" onclick="removeItem(${index})" title="حذف">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      body.innerHTML = html;
+      totalEl.textContent = formatPrice(total);
+    }
+
+    function changeQty(index, delta) {
+      cart[index].quantity += delta;
+      if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+      }
+      saveCart();
+      renderCart();
+    }
+
+    function removeItem(index) {
+      cart.splice(index, 1);
+      saveCart();
+      renderCart();
+    }
+
+    // =====================================================
+    // ثبت سفارش → ارسال به بک‌اند → ریدایرکت
+    // =====================================================
+    async function submitOrder() {
+      if (cart.length === 0) {
+        showToast('سبد خرید خالی است', 'error');
+        return;
+      }
+
+      if (!tableNumber) {
+        showToast('شماره میز مشخص نیست. از لینک میز استفاده کنید.', 'error');
+        return;
+      }
+
+      const orderBtn = document.getElementById('orderBtn');
+      const originalHTML = orderBtn.innerHTML;
+      orderBtn.disabled = true;
+      orderBtn.innerHTML = '<span class="spinner"></span> در حال ثبت...';
+
+      const payload = {
+        table: tableNumber,
+        items: cart.map(item => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity
+        })),
+        total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+      };
+
+      try {
+        const response = await fetch(API.order, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error('خطای سرور: ' + response.status);
+        }
+
+        const data = await response.json();
+
+        // بک‌اند باید چیزی شبیه این برگرداند:
+        // { "redirect_url": "https://example.com/payment/xyz" }
+        // یا { "link": "..." }
+        const redirectUrl = data.redirect_url || data.link || data.url;
+
+        if (redirectUrl) {
+          // پاک کردن سبد بعد از موفقیت
+          cart = [];
+          saveCart();
+          window.location.href = redirectUrl;
+        } else {
+          // اگر لینکی برنگرداند، فقط پیام موفقیت
+          showToast('سفارش با موفقیت ثبت شد', 'success');
+          cart = [];
+          saveCart();
+          closeCart();
+        }
+      } catch (err) {
+        console.error(err);
+        showToast('خطا در ارتباط با سرور. دوباره تلاش کنید.', 'error');
+        orderBtn.disabled = false;
+        orderBtn.innerHTML = originalHTML;
+      }
+    }
+
+    // =====================================================
+    // درخواست باریستا حضوری
+    // =====================================================
+    async function requestBarista() {
+      if (!tableNumber) {
+        showToast('شماره میز مشخص نیست. از لینک میز استفاده کنید.', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('baristaBtn');
+      const originalHTML = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>';
+
+      try {
+        const response = await fetch(API.barista, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ table: tableNumber })
+        });
+
+        if (!response.ok) {
+          throw new Error('خطای سرور');
+        }
+
+        showToast('درخواست باریستا ارسال شد ✓', 'success');
+      } catch (err) {
+        console.error(err);
+        showToast('خطا در ارسال درخواست. دوباره تلاش کنید.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHTML;
+      }
+    }
+
+    // =====================================================
+    // Toast
+    // =====================================================
+    function showToast(message, type = '') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = 'toast show' + (type ? ' ' + type : '');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2800);
+    }
+
+    // =====================================================
+    // وضعیت باز/بسته بودن کافه
+    // =====================================================
+    function checkCafeStatus() {
+      const now = new Date();
+      const hour = now.getHours();
+      const isOpen = hour >= 10 && hour < 23;
+
+      const statusDot = document.getElementById('statusDot');
+      const statusText = document.getElementById('statusText');
+
+      if (isOpen) {
+        statusDot.classList.add('open');
+        statusDot.classList.remove('closed');
+        statusText.textContent = 'باز است';
+        statusText.style.color = '#2ecc71';
+      } else {
+        statusDot.classList.add('closed');
+        statusDot.classList.remove('open');
+        statusText.textContent = 'تعطیل است';
+        statusText.style.color = '#e74c3c';
+      }
+    }
+
+    checkCafeStatus();
+    setInterval(checkCafeStatus, 60000);
+
+    // =====================================================
+    // ناوبری دسته‌ها
+    // =====================================================
+    const navBtns = document.querySelectorAll('.nav-btn');
+    const sections = document.querySelectorAll('.section');
+
+    navBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+        const target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        navBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          navBtns.forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('data-target') === id);
+          });
+        }
+      });
+    }, { root: null, rootMargin: '-20% 0px -60% 0px', threshold: 0 });
+
+    sections.forEach(section => sectionObserver.observe(section));
+
+    // =====================================================
+    // انیمیشن ورود کارت‌ها
+    // =====================================================
+    const cards = document.querySelectorAll('.product-card');
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, (index % 6) * 70);
+          cardObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+
+    cards.forEach(card => cardObserver.observe(card));
+
+    // مقداردهی اولیه
+    updateCartBadge();
+  </script>
+</body>
+</html>
