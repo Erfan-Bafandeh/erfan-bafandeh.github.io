@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://erfan-bafandeh.github.io/sitemap.xml
