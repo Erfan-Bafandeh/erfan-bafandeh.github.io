@@ -1,267 +1,237 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شمارنده شنا (از جلو و کنار)</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background: #0f172a;
-            color: white;
-        }
-        #webcam, #canvas {
-            transform: scaleX(-1);
-        }
-        #canvas-container {
-            position: relative;
-            width: 100%;
-            max-width: 640px;
-            aspect-ratio: 4/3;
-            background: #1e293b;
-            border-radius: 16px;
-            overflow: hidden;
-        }
-        #canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        .loader {
-            border: 6px solid #334155;
-            border-top: 6px solid #3b82f6;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <title>PushUp â€” Smart Rep Counter</title>
+  <style>
+    :root{color-scheme:dark;--bg:#090d18;--panel:#11182a;--panel2:#151f35;--line:#28334c;--text:#f4f7ff;--muted:#9ca9c4;--green:#55e6a5;--blue:#80a7ff;--amber:#ffcf70;--red:#ff7d8b}
+    *{box-sizing:border-box} body{margin:0;background:radial-gradient(ellipse at top,#172342 0,#090d18 55%);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);min-height:100vh}
+    .wrap{max-width:1120px;margin:auto;padding:26px 18px 40px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#6d93ff,#57e6b0);color:#08111e;font-size:22px;font-weight:900}.brand h1{font-size:20px;letter-spacing:-.5px;margin:0}.brand p{color:var(--muted);margin:3px 0 0;font-size:12px}.privacy{border:1px solid var(--line);border-radius:999px;padding:9px 12px;color:#b6c4dc;font-size:12px;white-space:nowrap}
+    .layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.8fr);gap:18px}.panel{background:linear-gradient(180deg,rgba(20,29,49,.96),rgba(13,19,33,.96));border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:0 18px 55px #0003}.video-head{display:flex;justify-content:space-between;align-items:center;padding:17px 19px;border-bottom:1px solid var(--line)}.video-head h2{font-size:14px;margin:0}.status{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}.dot{width:8px;height:8px;border-radius:50%;background:#65718b}.dot.live{background:var(--green);box-shadow:0 0 12px #55e6a588}
+    .camera{position:relative;background:#050812;aspect-ratio:4/3;min-height:250px;display:grid;place-items:center;overflow:hidden}.camera video,.camera canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}.camera canvas{pointer-events:none}.placeholder{max-width:330px;text-align:center;padding:24px;color:var(--muted);z-index:1}.placeholder .cam-icon{font-size:38px;margin-bottom:10px}.placeholder strong{display:block;color:var(--text);font-size:16px;margin-bottom:7px}.placeholder p{font-size:13px;line-height:1.55;margin:0}.camera-note{position:absolute;z-index:2;left:12px;bottom:12px;padding:7px 10px;border-radius:9px;background:#070b15c9;border:1px solid #ffffff1c;color:#dbe4f7;font-size:11px;backdrop-filter:blur(8px)}
+    .controls{padding:16px 18px;display:flex;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line)}button{font:inherit;cursor:pointer;border:0;border-radius:12px;padding:12px 16px;font-weight:750;font-size:13px;transition:transform .15s,opacity .15s}button:active{transform:scale(.98)}button:disabled{opacity:.4;cursor:not-allowed}.primary{background:var(--green);color:#07150f}.secondary{background:#202b43;color:#e9efff;border:1px solid #33415f}.danger{color:#ffd8dc;background:#3b202b;border:1px solid #653341}.hint{padding:0 19px 16px;color:var(--muted);font-size:12px;line-height:1.55}
+    .stats{padding:20px}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.7px;color:var(--muted);font-weight:800}.count{font-size:clamp(76px,10vw,112px);line-height:1;font-weight:850;letter-spacing:-6px;margin:13px 0 9px;font-variant-numeric:tabular-nums}.count-label{color:var(--muted);font-size:13px}.statline{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:23px}.mini{padding:13px;border:1px solid var(--line);border-radius:14px;background:#ffffff03}.mini span{display:block;color:var(--muted);font-size:11px;margin-bottom:8px}.mini strong{font-size:21px;font-variant-numeric:tabular-nums}.divider{height:1px;background:var(--line);margin:20px 0}.feedback{border:1px solid var(--line);border-radius:14px;padding:13px;background:#0c1221}.feedback-head{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;margin-bottom:8px}.feedback-head span:last-child{color:var(--amber)}.feedback p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}.meter{height:5px;background:#263149;border-radius:99px;overflow:hidden;margin-top:12px}.meter div{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--green));transition:width .2s}.settings{padding:18px 20px;border-top:1px solid var(--line)}.settings h3{font-size:13px;margin:0 0 14px}.field{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:12px 0;font-size:12px;color:#cbd5e8}.field input{width:76px;background:#0a1020;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:8px;font:inherit}.foot{margin-top:18px;color:#7886a3;font-size:11px;line-height:1.6;text-align:center}.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);padding:11px 15px;border-radius:12px;background:#18233a;border:1px solid #354462;color:var(--text);font-size:13px;box-shadow:0 10px 35px #0007;display:none;z-index:10}.toast.show{display:block}
+    @media(max-width:780px){.layout{grid-template-columns:1fr}.wrap{padding:18px 12px 28px}.top{align-items:flex-start}.privacy{font-size:10px;padding:8px}.camera{aspect-ratio:3/4;max-height:58vh}.count{font-size:88px}.stats{padding:18px}}
+  </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4">
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><div class="logo">P</div><div><h1>PushUp</h1><p>Smart rep counter Â· Real-time pose tracking</p></div></div>
+    <div class="privacy">ðŸ”’ Processed on your device</div>
+  </header>
 
-    <div class="w-full max-w-4xl mx-auto flex flex-col items-center gap-6">
-        <div class="text-center">
-            <h1 class="text-3xl md:text-4xl font-bold text-blue-400 mb-2">شمارنده شنا</h1>
-            <p class="text-slate-400 text-sm">از جلو یا کنار — هر دو کار می‌کنه</p>
+  <main class="layout">
+    <section class="panel">
+      <div class="video-head"><h2>Camera &amp; Form Tracking</h2><div class="status"><i id="liveDot" class="dot"></i><span id="cameraStatus">Camera is off</span></div></div>
+      <div class="camera" id="cameraBox">
+        <video id="video" autoplay playsinline muted></video>
+        <canvas id="overlay"></canvas>
+        <div class="placeholder" id="placeholder"><div class="cam-icon">â—Ž</div><strong>Ready when you are</strong><p>Allow camera access, then position your full upper body and arms in the frame.</p></div>
+        <div class="camera-note" id="cameraNote">Front view Â· Full arms visible</div>
+      </div>
+      <div class="controls">
+        <button class="primary" id="startBtn">Enable Camera</button>
+        <button class="secondary" id="sessionBtn" disabled>Start Workout</button>
+        <button class="secondary" id="pauseBtn" disabled>Pause</button>
+        <button class="danger" id="resetBtn">Reset Count</button>
+      </div>
+      <div class="hint">For front-facing tracking, keep your shoulders, elbows, wrists, hips, and ankles visible. Use a stable phone at roughly chest height, far enough away to capture your full body. Good lighting improves tracking.</div>
+    </section>
+
+    <aside class="panel">
+      <div class="stats">
+        <div class="eyebrow">Repetitions completed</div>
+        <div class="count" id="count">0</div>
+        <div class="count-label">Only completed down-and-up movements are counted.</div>
+        <div class="statline">
+          <div class="mini"><span>Workout time</span><strong id="time">00:00</strong></div>
+          <div class="mini"><span>Current phase</span><strong id="phase">Ready</strong></div>
         </div>
-
-        <div id="loading" class="flex flex-col items-center justify-center py-20">
-            <div class="loader mb-4"></div>
-            <p id="loading-message" class="text-lg text-slate-300">در حال بارگذاری مدل...</p>
+        <div class="divider"></div>
+        <div class="feedback">
+          <div class="feedback-head"><strong>Tracking status</strong><span id="confidenceLabel">Waiting for camera</span></div>
+          <p id="feedback">Enable the camera and make sure your body is clearly visible. Counting starts only after you begin a workout.</p>
+          <div class="meter"><div id="confidenceBar"></div></div>
         </div>
+      </div>
+      <div class="settings">
+        <h3>Counter settings</h3>
+        <div class="field"><label for="downAngle">Down phase elbow angle</label><input id="downAngle" type="number" min="45" max="125" value="95"></div>
+        <div class="field"><label for="upAngle">Up phase elbow angle</label><input id="upAngle" type="number" min="130" max="179" value="155"></div>
+        <div class="field"><label for="visibility">Minimum landmark visibility</label><input id="visibility" type="number" min="0.3" max="0.95" step="0.05" value="0.6"></div>
+        <p style="margin:12px 0 0;color:var(--muted);font-size:11px;line-height:1.5">Adjust thresholds if your range of motion differs. For best results, keep the camera fixed and avoid loose clothing that hides your joints.</p>
+      </div>
+    </aside>
+  </main>
+  <div class="foot">Your camera stream is analyzed locally in this browser. No video is uploaded to a server by this page.<br>Pose estimation loads from Google's MediaPipe CDN and model hosting, so an internet connection is required.</div>
+</div>
+<div class="toast" id="toast"></div>
 
-        <div id="main-content" class="hidden w-full flex flex-col lg:flex-row items-center justify-center gap-6">
-            
-            <div id="canvas-container">
-                <video id="webcam" autoplay playsinline muted class="w-full h-full object-cover"></video>
-                <canvas id="canvas"></canvas>
-            </div>
+<script type="module">
+  import { PoseLandmarker, FilesetResolver, DrawingUtils } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 
-            <div class="bg-slate-800 p-6 rounded-2xl shadow-xl w-full max-w-xs flex flex-col items-center text-center">
-                <div class="mb-6">
-                    <p class="text-slate-400 text-sm mb-1">تعداد شنا</p>
-                    <p id="count" class="text-7xl font-bold">0</p>
-                </div>
+  const $ = id => document.getElementById(id);
+  const video = $("video"), canvas = $("overlay"), ctx = canvas.getContext("2d");
+  const startBtn = $("startBtn"), sessionBtn = $("sessionBtn"), pauseBtn = $("pauseBtn"), resetBtn = $("resetBtn");
+  let stream = null, landmarker = null, running = false, workoutActive = false, paused = false;
+  let lastVideoTime = -1, rafId = null, reps = 0, phase = "Ready", lastTime = 0, elapsedMs = 0, workoutStart = 0;
+  let lastCountAt = 0, downSeen = false, goodFrames = 0, noPoseFrames = 0, lastAngle = null, sessionTimer = null;
+  const draw = new DrawingUtils(ctx);
+  const connections = [
+    [11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],
+    [23,25],[25,27],[24,26],[26,28]
+  ];
 
-                <div class="mb-6">
-                    <p class="text-slate-400 text-sm mb-1">وضعیت</p>
-                    <p id="stage" class="text-2xl font-semibold text-yellow-400">-</p>
-                </div>
+  function toast(msg){const el=$("toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2600)}
+  function setStatus(msg, live=false){$("cameraStatus").textContent=msg;$("liveDot").classList.toggle("live",live)}
+  function setFeedback(title,msg,progress=0){$("confidenceLabel").textContent=title;$("feedback").textContent=msg;$("confidenceBar").style.width=Math.max(0,Math.min(100,progress))+"%"}
+  function formatTime(ms){const sec=Math.floor(ms/1000);return String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0")}
+  function angle(a,b,c){const ab=[a.x-b.x,a.y-b.y], cb=[c.x-b.x,c.y-b.y];const dot=ab[0]*cb[0]+ab[1]*cb[1];const mag=Math.hypot(...ab)*Math.hypot(...cb);if(!mag)return null;return Math.acos(Math.max(-1,Math.min(1,dot/mag)))*180/Math.PI}
+  function vis(lm,i,min){return !!lm[i] && (lm[i].visibility ?? 0) >= min}
+  function mean(vals){const v=vals.filter(Number.isFinite);return v.length?v.reduce((a,b)=>a+b,0)/v.length:null}
+  function getPose(lm){
+    const min=Math.max(.3,Math.min(.95,Number($("visibility").value)||.6));
+    const needed=[11,12,13,14,15,16,23,24,25,26,27,28];
+    if(!needed.every(i=>vis(lm,i,min))) return {ok:false,reason:"Keep both arms, shoulders, hips, and ankles visible."};
+    const left=angle(lm[11],lm[13],lm[15]), right=angle(lm[12],lm[14],lm[16]);
+    const elbow=mean([left,right]);
+    if(elbow===null)return {ok:false,reason:"Could not estimate elbow angles."};
+    // Reject obviously unreliable / twisted torso alignment when landmarks are available.
+    const shoulderMid={x:(lm[11].x+lm[12].x)/2,y:(lm[11].y+lm[12].y)/2};
+    const hipMid={x:(lm[23].x+lm[24].x)/2,y:(lm[23].y+lm[24].y)/2};
+    const ankleMid={x:(lm[27].x+lm[28].x)/2,y:(lm[27].y+lm[28].y)/2};
+    const torsoLen=Math.hypot(shoulderMid.x-hipMid.x,shoulderMid.y-hipMid.y);
+    const bodyLen=Math.hypot(shoulderMid.x-ankleMid.x,shoulderMid.y-ankleMid.y);
+    if(bodyLen < .12 || torsoLen < .035) return {ok:false,reason:"Move back so your full body is visible."};
+    // Both arms should roughly agree; strong disagreement often means occlusion or poor front-view geometry.
+    if(Number.isFinite(left)&&Number.isFinite(right)&&Math.abs(left-right)>65)
+      return {ok:false,reason:"Arms are hard to track. Face the camera squarely and show both elbows."};
+    return {ok:true,elbow,left,right,reason:"Pose detected"};
+  }
 
-                <div class="mb-6 w-full">
-                    <p class="text-slate-400 text-sm mb-1">پیام</p>
-                    <p id="feedback" class="text-base font-medium text-green-400 min-h-[28px]">آماده...</p>
-                </div>
-
-                <button id="reset-button" 
-                    class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-xl transition">
-                    ریست کردن
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
-
-    <script>
-        const video = document.getElementById('webcam');
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        const countEl = document.getElementById('count');
-        const stageEl = document.getElementById('stage');
-        const feedbackEl = document.getElementById('feedback');
-        const loadingEl = document.getElementById('loading');
-        const loadingMessageEl = document.getElementById('loading-message');
-        const mainContentEl = document.getElementById('main-content');
-        const resetButton = document.getElementById('reset-button');
-
-        let detector = null;
-        let counter = 0;
-        let stage = 'up';
-
-        function calculateAngle(a, b, c) {
-            const radians = Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
-            let angle = Math.abs(radians * 180.0 / Math.PI);
-            if (angle > 180.0) angle = 360 - angle;
-            return angle;
+  async function initPose(){
+    if(landmarker)return;
+    setStatus("Loading pose modelâ€¦");
+    setFeedback("Loading model","Downloading the pose model for on-device inference. This may take a moment.",10);
+    const vision=await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
+    landmarker=await PoseLandmarker.createFromOptions(vision,{
+      baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task",delegate:"GPU"},
+      runningMode:"VIDEO",numPoses:1,
+      minPoseDetectionConfidence:.55,minPosePresenceConfidence:.55,minTrackingConfidence:.55
+    });
+  }
+  async function enableCamera(){
+    try{
+      startBtn.disabled=true;
+      await initPose();
+      stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:{ideal:1280},height:{ideal:720}},audio:false});
+      video.srcObject=stream;
+      await new Promise((resolve,reject)=>{video.onloadedmetadata=resolve;video.onerror=reject});
+      await video.play();
+      $("placeholder").style.display="none";
+      startBtn.textContent="Camera Enabled";
+      sessionBtn.disabled=false;pauseBtn.disabled=true;
+      setStatus("Camera ready",true);
+      resizeCanvas();running=true;loop();
+      setFeedback("Camera ready","Press Start Workout when you are in position. Keep all required joints visible.",25);
+    }catch(e){
+      console.error(e);
+      startBtn.disabled=false;setStatus("Camera unavailable");
+      setFeedback("Camera error",e.name==="NotAllowedError"?"Camera permission was denied. Allow camera access in your browser settings.":"Could not start the camera or load the pose model. Use HTTPS or localhost and check your internet connection.",0);
+      toast("Could not start camera");
+    }
+  }
+  function resizeCanvas(){const r=video.getBoundingClientRect();const dpr=window.devicePixelRatio||1;canvas.width=Math.round(r.width*dpr);canvas.height=Math.round(r.height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}
+  window.addEventListener("resize",resizeCanvas);
+  function drawPose(lm){
+    const w=canvas.clientWidth,h=canvas.clientHeight;ctx.clearRect(0,0,w,h);
+    if(!lm)return;
+    // Video is mirrored with CSS; mirror landmarks in canvas coordinates too.
+    const point=i=>({x:(1-lm[i].x)*w,y:lm[i].y*h});
+    ctx.lineWidth=3;ctx.lineCap="round";ctx.strokeStyle="#55e6a5";
+    for(const [a,b] of connections){if((lm[a].visibility??0)>.4&&(lm[b].visibility??0)>.4){const p=point(a),q=point(b);ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke()}}
+    for(const i of [11,12,13,14,15,16,23,24,25,26,27,28]){if((lm[i].visibility??0)>.4){const p=point(i);ctx.beginPath();ctx.arc(p.x,p.y,4,0,Math.PI*2);ctx.fillStyle="#80a7ff";ctx.fill()}}
+  }
+  function loop(){
+    if(!running)return;
+    if(video.readyState>=2 && video.currentTime!==lastVideoTime){
+      lastVideoTime=video.currentTime;
+      try{
+        const result=landmarker.detectForVideo(video,performance.now());
+        const lm=result.landmarks?.[0];
+        drawPose(lm);
+        if(lm){
+          const p=getPose(lm);
+          if(p.ok){
+            noPoseFrames=0;goodFrames=Math.min(100,goodFrames+1);lastAngle=p.elbow;
+            $("confidenceLabel").textContent="Good visibility";
+            $("confidenceBar").style.width=Math.min(100,goodFrames*2)+"%";
+            if(workoutActive&&!paused)processAngle(p.elbow);
+            if(!workoutActive)setFeedback("Pose detected","Your body is visible. Start your workout when ready.",Math.min(100,goodFrames*2));
+          }else{
+            noPoseFrames++;goodFrames=Math.max(0,goodFrames-3);
+            setFeedback("Adjust position",p.reason,Math.min(100,goodFrames*2));
+          }
+        }else{
+          noPoseFrames++;goodFrames=Math.max(0,goodFrames-4);
+          setFeedback("No person detected","Move into view and make sure lighting is good. No repetitions are counted without a reliable pose.",Math.min(100,goodFrames*2));
         }
-
-        async function setupCamera() {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: { width: 640, height: 480, facingMode: 'user' }
-            });
-            video.srcObject = stream;
-            return new Promise(resolve => {
-                video.onloadedmetadata = () => resolve(video);
-            });
-        }
-
-        async function loadModel() {
-            const model = poseDetection.SupportedModels.MoveNet;
-            detector = await poseDetection.createDetector(model, {
-                modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING
-            });
-        }
-
-        async function detectPose() {
-            if (!detector) return;
-
-            try {
-                const poses = await detector.estimatePoses(video);
-                
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                if (poses && poses.length > 0) {
-                    const pose = poses[0];
-                    processPushup(pose);
-                    drawKeypoints(pose);
-                    drawSkeleton(pose);
-                }
-            } catch (err) {
-                console.error(err);
-            }
-
-            requestAnimationFrame(detectPose);
-        }
-
-        function drawKeypoints(pose) {
-            for (const kp of pose.keypoints) {
-                if (kp.score > 0.35) {
-                    ctx.beginPath();
-                    ctx.arc(kp.x, kp.y, 5, 0, 2 * Math.PI);
-                    ctx.fillStyle = '#22c55e';
-                    ctx.fill();
-                }
-            }
-        }
-
-        function drawSkeleton(pose) {
-            const pairs = poseDetection.util.getAdjacentPairs(poseDetection.SupportedModels.MoveNet);
-            ctx.lineWidth = 3;
-            ctx.strokeStyle = '#22c55e';
-
-            pairs.forEach(([i, j]) => {
-                const kp1 = pose.keypoints[i];
-                const kp2 = pose.keypoints[j];
-                if (kp1.score > 0.35 && kp2.score > 0.35) {
-                    ctx.beginPath();
-                    ctx.moveTo(kp1.x, kp1.y);
-                    ctx.lineTo(kp2.x, kp2.y);
-                    ctx.stroke();
-                }
-            });
-        }
-
-        function processPushup(pose) {
-            const kp = pose.keypoints;
-
-            const leftShoulder = kp.find(k => k.name === 'left_shoulder');
-            const leftElbow = kp.find(k => k.name === 'left_elbow');
-            const leftWrist = kp.find(k => k.name === 'left_wrist');
-            const rightShoulder = kp.find(k => k.name === 'right_shoulder');
-            const rightElbow = kp.find(k => k.name === 'right_elbow');
-            const rightWrist = kp.find(k => k.name === 'right_wrist');
-
-            let angles = [];
-
-            // زاویه دست چپ
-            if (leftShoulder.score > 0.35 && leftElbow.score > 0.35 && leftWrist.score > 0.35) {
-                angles.push(calculateAngle(leftShoulder, leftElbow, leftWrist));
-            }
-
-            // زاویه دست راست
-            if (rightShoulder.score > 0.35 && rightElbow.score > 0.35 && rightWrist.score > 0.35) {
-                angles.push(calculateAngle(rightShoulder, rightElbow, rightWrist));
-            }
-
-            if (angles.length === 0) {
-                feedbackEl.textContent = 'دست‌هات واضح نیستن';
-                feedbackEl.className = 'text-base font-medium text-yellow-400';
-                return;
-            }
-
-            // میانگین زاویه دو دست (یا همونی که موجوده)
-            const angle = angles.reduce((a, b) => a + b, 0) / angles.length;
-
-            // منطق شمارش
-            if (angle > 150) {          // دست‌ها صاف → بالا
-                if (stage === 'down') {
-                    counter++;
-                    feedbackEl.textContent = 'عالی!';
-                    feedbackEl.className = 'text-base font-medium text-green-400';
-                }
-                stage = 'up';
-            } 
-            else if (angle < 100) {     // دست‌ها خم → پایین
-                if (stage === 'up') {
-                    feedbackEl.textContent = 'برو پایین‌تر...';
-                    feedbackEl.className = 'text-base font-medium text-blue-400';
-                }
-                stage = 'down';
-            }
-
-            countEl.textContent = counter;
-            stageEl.textContent = stage === 'up' ? 'بالا' : 'پایین';
-        }
-
-        resetButton.addEventListener('click', () => {
-            counter = 0;
-            stage = 'up';
-            countEl.textContent = '0';
-            stageEl.textContent = '-';
-            feedbackEl.textContent = 'شمارنده ریست شد';
-            feedbackEl.className = 'text-base font-medium text-slate-300';
-        });
-
-        async function main() {
-            try {
-                await loadModel();
-                loadingMessageEl.textContent = 'لطفاً اجازه دوربین را بدهید...';
-                await setupCamera();
-
-                loadingEl.classList.add('hidden');
-                mainContentEl.classList.remove('hidden');
-                feedbackEl.textContent = 'آماده! شروع کن';
-                detectPose();
-            } catch (e) {
-                loadingMessageEl.textContent = 'خطا: ' + e.message;
-                loadingMessageEl.style.color = '#f87171';
-            }
-        }
-
-        main();
-    </script>
+      }catch(e){console.warn(e);setFeedback("Tracking issue","Pose tracking is recovering. Hold still briefly.",0)}
+    }
+    if(workoutActive&&!paused){const now=performance.now();elapsedMs+=(now-lastTime);lastTime=now;$("time").textContent=formatTime(elapsedMs)}
+    else lastTime=performance.now();
+    rafId=requestAnimationFrame(loop);
+  }
+  function processAngle(a){
+    const down=Number($("downAngle").value)||95, up=Number($("upAngle").value)||155;
+    if(down>=up-15){setFeedback("Check settings","Down angle must be at least 15Â° lower than up angle.",0);return}
+    // State machine: a low elbow angle arms a rep; only a subsequent full extension counts.
+    if(a<=down){
+      if(!downSeen){downSeen=true;phase="Down";$("phase").textContent=phase}
+      setFeedback("Down phase",`Elbow angle: ${Math.round(a)}Â°. Push back up to complete the repetition.`,75);
+    }else if(a>=up){
+      if(downSeen && performance.now()-lastCountAt>650 && noPoseFrames===0){
+        reps++;$("count").textContent=reps;lastCountAt=performance.now();downSeen=false;
+        phase="Up";$("phase").textContent=phase;
+        setFeedback("Rep counted",`Nice! ${reps} completed ${reps===1?"repetition":"repetitions"}. Lower with control for the next rep.`,100);
+      }else if(!downSeen){
+        phase="Up";$("phase").textContent=phase;
+        setFeedback("Top position",`Elbow angle: ${Math.round(a)}Â°. Lower until your elbows bend to register the next rep.`,65);
+      }
+    }else{
+      phase=downSeen?"Going up":"Moving";
+      $("phase").textContent=phase;
+      setFeedback("Movement detected",`Estimated elbow angle: ${Math.round(a)}Â°. Complete the full down-and-up movement.`,55);
+    }
+  }
+  function startWorkout(){
+    if(!stream)return;
+    workoutActive=true;paused=false;downSeen=false;lastCountAt=0;lastTime=performance.now();
+    sessionBtn.disabled=true;pauseBtn.disabled=false;pauseBtn.textContent="Pause";
+    $("phase").textContent="Ready";setStatus("Workout active",true);
+    setFeedback("Workout active","Start from the top position, lower your body, then push back up. Partial movements do not count.",50);
+  }
+  function pauseWorkout(){
+    if(!workoutActive)return;
+    paused=!paused;pauseBtn.textContent=paused?"Resume":"Pause";
+    setStatus(paused?"Workout paused":"Workout active",!paused);
+    if(paused){setFeedback("Paused","Your count is saved. Resume when you are ready.",0);$("phase").textContent="Paused"}
+    else{lastTime=performance.now();$("phase").textContent="Ready";setFeedback("Workout active","Continue with a complete down-and-up movement.",50)}
+  }
+  function reset(){
+    reps=0;elapsedMs=0;downSeen=false;lastCountAt=0;phase="Ready";
+    $("count").textContent="0";$("time").textContent="00:00";$("phase").textContent="Ready";
+    if(workoutActive){workoutActive=false;paused=false;sessionBtn.disabled=!stream;pauseBtn.disabled=true;pauseBtn.textContent="Pause";setStatus(stream?"Camera ready":"Camera is off",!!stream)}
+    setFeedback(stream?"Count reset":"Waiting for camera",stream?"Count reset. Start a new workout when ready.":"Enable the camera to begin.",stream?25:0);
+  }
+  startBtn.addEventListener("click",enableCamera);
+  sessionBtn.addEventListener("click",startWorkout);
+  pauseBtn.addEventListener("click",pauseWorkout);
+  resetBtn.addEventListener("click",reset);
+  window.addEventListener("beforeunload",()=>{running=false;if(stream)stream.getTracks().forEach(t=>t.stop());if(landmarker)landmarker.close();if(rafId)cancelAnimationFrame(rafId)});
+</script>
 </body>
 </html>
