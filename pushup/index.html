@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شمارنده شنا با هوش مصنوعی</title>
+    <title>شمارنده شنا (از جلو و کنار)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -12,7 +12,7 @@
             color: white;
         }
         #webcam, #canvas {
-            transform: scaleX(-1); /* آینه کردن تصویر */
+            transform: scaleX(-1);
         }
         #canvas-container {
             position: relative;
@@ -49,29 +49,25 @@
     <div class="w-full max-w-4xl mx-auto flex flex-col items-center gap-6">
         <div class="text-center">
             <h1 class="text-3xl md:text-4xl font-bold text-blue-400 mb-2">شمارنده شنا</h1>
-            <p class="text-slate-400 text-sm">بدنت رو از کنار به دوربین نشون بده و شنا بزن</p>
+            <p class="text-slate-400 text-sm">از جلو یا کنار — هر دو کار می‌کنه</p>
         </div>
 
-        <!-- لودینگ -->
         <div id="loading" class="flex flex-col items-center justify-center py-20">
             <div class="loader mb-4"></div>
-            <p id="loading-message" class="text-lg text-slate-300">در حال بارگذاری مدل هوش مصنوعی...</p>
+            <p id="loading-message" class="text-lg text-slate-300">در حال بارگذاری مدل...</p>
         </div>
 
-        <!-- محتوای اصلی -->
         <div id="main-content" class="hidden w-full flex flex-col lg:flex-row items-center justify-center gap-6">
             
-            <!-- دوربین -->
             <div id="canvas-container">
                 <video id="webcam" autoplay playsinline muted class="w-full h-full object-cover"></video>
                 <canvas id="canvas"></canvas>
             </div>
 
-            <!-- پنل اطلاعات -->
             <div class="bg-slate-800 p-6 rounded-2xl shadow-xl w-full max-w-xs flex flex-col items-center text-center">
                 <div class="mb-6">
                     <p class="text-slate-400 text-sm mb-1">تعداد شنا</p>
-                    <p id="count" class="text-7xl font-bold text-white">0</p>
+                    <p id="count" class="text-7xl font-bold">0</p>
                 </div>
 
                 <div class="mb-6">
@@ -92,7 +88,6 @@
         </div>
     </div>
 
-    <!-- TensorFlow.js -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
@@ -112,9 +107,8 @@
 
         let detector = null;
         let counter = 0;
-        let stage = 'up'; // up یا down
+        let stage = 'up';
 
-        // محاسبه زاویه بین سه نقطه
         function calculateAngle(a, b, c) {
             const radians = Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
             let angle = Math.abs(radians * 180.0 / Math.PI);
@@ -122,7 +116,6 @@
             return angle;
         }
 
-        // راه‌اندازی دوربین
         async function setupCamera() {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: { width: 640, height: 480, facingMode: 'user' }
@@ -133,23 +126,19 @@
             });
         }
 
-        // بارگذاری مدل
         async function loadModel() {
             const model = poseDetection.SupportedModels.MoveNet;
-            const detectorConfig = {
+            detector = await poseDetection.createDetector(model, {
                 modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING
-            };
-            detector = await poseDetection.createDetector(model, detectorConfig);
+            });
         }
 
-        // حلقه اصلی تشخیص
         async function detectPose() {
             if (!detector) return;
 
             try {
                 const poses = await detector.estimatePoses(video);
                 
-                // پاک کردن بوم
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -167,10 +156,9 @@
             requestAnimationFrame(detectPose);
         }
 
-        // رسم نقاط
         function drawKeypoints(pose) {
             for (const kp of pose.keypoints) {
-                if (kp.score > 0.4) {
+                if (kp.score > 0.35) {
                     ctx.beginPath();
                     ctx.arc(kp.x, kp.y, 5, 0, 2 * Math.PI);
                     ctx.fillStyle = '#22c55e';
@@ -179,7 +167,6 @@
             }
         }
 
-        // رسم اسکلت
         function drawSkeleton(pose) {
             const pairs = poseDetection.util.getAdjacentPairs(poseDetection.SupportedModels.MoveNet);
             ctx.lineWidth = 3;
@@ -188,7 +175,7 @@
             pairs.forEach(([i, j]) => {
                 const kp1 = pose.keypoints[i];
                 const kp2 = pose.keypoints[j];
-                if (kp1.score > 0.4 && kp2.score > 0.4) {
+                if (kp1.score > 0.35 && kp2.score > 0.35) {
                     ctx.beginPath();
                     ctx.moveTo(kp1.x, kp1.y);
                     ctx.lineTo(kp2.x, kp2.y);
@@ -197,63 +184,58 @@
             });
         }
 
-        // منطق شمارش شنا
         function processPushup(pose) {
-            const keypoints = pose.keypoints;
+            const kp = pose.keypoints;
 
-            const leftShoulder = keypoints.find(k => k.name === 'left_shoulder');
-            const leftElbow = keypoints.find(k => k.name === 'left_elbow');
-            const leftWrist = keypoints.find(k => k.name === 'left_wrist');
-            const rightShoulder = keypoints.find(k => k.name === 'right_shoulder');
-            const rightElbow = keypoints.find(k => k.name === 'right_elbow');
-            const rightWrist = keypoints.find(k => k.name === 'right_wrist');
+            const leftShoulder = kp.find(k => k.name === 'left_shoulder');
+            const leftElbow = kp.find(k => k.name === 'left_elbow');
+            const leftWrist = kp.find(k => k.name === 'left_wrist');
+            const rightShoulder = kp.find(k => k.name === 'right_shoulder');
+            const rightElbow = kp.find(k => k.name === 'right_elbow');
+            const rightWrist = kp.find(k => k.name === 'right_wrist');
 
-            // اگر هر دو شانه مشخص باشن، یعنی روبه‌رو ایستاده
-            if (leftShoulder.score > 0.5 && rightShoulder.score > 0.5) {
-                feedbackEl.textContent = 'لطفاً بدنت رو از کنار به دوربین نشون بده';
+            let angles = [];
+
+            // زاویه دست چپ
+            if (leftShoulder.score > 0.35 && leftElbow.score > 0.35 && leftWrist.score > 0.35) {
+                angles.push(calculateAngle(leftShoulder, leftElbow, leftWrist));
+            }
+
+            // زاویه دست راست
+            if (rightShoulder.score > 0.35 && rightElbow.score > 0.35 && rightWrist.score > 0.35) {
+                angles.push(calculateAngle(rightShoulder, rightElbow, rightWrist));
+            }
+
+            if (angles.length === 0) {
+                feedbackEl.textContent = 'دست‌هات واضح نیستن';
                 feedbackEl.className = 'text-base font-medium text-yellow-400';
                 return;
             }
 
-            // انتخاب دستی که وضوح بهتری داره
-            let shoulder, elbow, wrist;
-            if (leftShoulder.score > rightShoulder.score) {
-                shoulder = leftShoulder;
-                elbow = leftElbow;
-                wrist = leftWrist;
-            } else {
-                shoulder = rightShoulder;
-                elbow = rightElbow;
-                wrist = rightWrist;
-            }
+            // میانگین زاویه دو دست (یا همونی که موجوده)
+            const angle = angles.reduce((a, b) => a + b, 0) / angles.length;
 
-            if (shoulder.score > 0.4 && elbow.score > 0.4 && wrist.score > 0.4) {
-                const angle = calculateAngle(shoulder, elbow, wrist);
-
-                if (angle > 155) { // دست صاف (بالا)
-                    if (stage === 'down') {
-                        counter++;
-                        feedbackEl.textContent = 'عالی!';
-                        feedbackEl.className = 'text-base font-medium text-green-400';
-                    }
-                    stage = 'up';
-                } else if (angle < 95) { // دست خم (پایین)
-                    if (stage === 'up') {
-                        feedbackEl.textContent = 'برو پایین‌تر...';
-                        feedbackEl.className = 'text-base font-medium text-blue-400';
-                    }
-                    stage = 'down';
+            // منطق شمارش
+            if (angle > 150) {          // دست‌ها صاف → بالا
+                if (stage === 'down') {
+                    counter++;
+                    feedbackEl.textContent = 'عالی!';
+                    feedbackEl.className = 'text-base font-medium text-green-400';
                 }
-
-                countEl.textContent = counter;
-                stageEl.textContent = stage === 'up' ? 'بالا' : 'پایین';
-            } else {
-                feedbackEl.textContent = 'شانه، آرنج و مچ دستت باید مشخص باشه';
-                feedbackEl.className = 'text-base font-medium text-yellow-400';
+                stage = 'up';
+            } 
+            else if (angle < 100) {     // دست‌ها خم → پایین
+                if (stage === 'up') {
+                    feedbackEl.textContent = 'برو پایین‌تر...';
+                    feedbackEl.className = 'text-base font-medium text-blue-400';
+                }
+                stage = 'down';
             }
+
+            countEl.textContent = counter;
+            stageEl.textContent = stage === 'up' ? 'بالا' : 'پایین';
         }
 
-        // ریست
         resetButton.addEventListener('click', () => {
             counter = 0;
             stage = 'up';
@@ -263,11 +245,10 @@
             feedbackEl.className = 'text-base font-medium text-slate-300';
         });
 
-        // شروع برنامه
         async function main() {
             try {
                 await loadModel();
-                loadingMessageEl.textContent = 'لطفاً اجازه دسترسی به دوربین را بدهید...';
+                loadingMessageEl.textContent = 'لطفاً اجازه دوربین را بدهید...';
                 await setupCamera();
 
                 loadingEl.classList.add('hidden');
@@ -283,4 +264,4 @@
         main();
     </script>
 </body>
-  </html>
+</html>
