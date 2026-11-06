@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <meta name="description" content="اسکنر دستگاه‌های بلوتوث کم‌مصرف اطراف">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>Nearby Radar</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b1220;--panel:#141f31;--line:#26364e;--muted:#9aabc2;--text:#eef4ff;--accent:#54d6b2}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 85% 0,#17304a 0,transparent 35%),var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;min-height:100vh}
+    main{max-width:760px;margin:auto;padding:22px 16px 48px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    h1{font-size:25px;margin:0}.sub{color:var(--muted);font-size:13px;margin-top:8px;line-height:1.8}
+    .pill{border:1px solid var(--line);border-radius:30px;padding:7px 11px;color:var(--accent);font-size:12px}
+    .hero,.panel{background:linear-gradient(145deg,#17263b,#111b2b);border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:18px}
+    .hero{text-align:center;padding:25px 18px}.radar{width:116px;height:116px;border:1px solid #397d78;border-radius:50%;margin:0 auto 15px;display:grid;place-items:center;position:relative;background:repeating-radial-gradient(circle,transparent 0 19px,#2a665f 20px 21px);color:var(--accent);font-size:34px}
+    .radar:after{content:"";position:absolute;width:50%;height:1px;background:var(--accent);right:50%;top:50%;transform-origin:right;animation:sweep 3s linear infinite}
+    @keyframes sweep{to{transform:rotate(360deg)}}
+    button{border:0;border-radius:13px;padding:13px 18px;font-weight:bold;font-size:15px;cursor:pointer}
+    #scan{background:var(--accent);color:#06231e;width:100%;margin-top:12px}#stop{background:#34445b;color:white;width:100%;margin-top:9px;display:none}
+    button:disabled{opacity:.5;cursor:not-allowed}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+    .stat{background:#0d1726;border:1px solid var(--line);padding:13px;border-radius:14px;text-align:right}.num{font-size:22px;font-weight:bold}.small{font-size:12px;color:var(--muted);margin-top:5px}
+    .section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.section-title h2{font-size:17px;margin:0}
+    .device{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.device:last-child{border:0}
+    .device-name{font-weight:bold;overflow-wrap:anywhere}.meta{color:var(--muted);font-size:12px;margin-top:5px;direction:ltr;text-align:right}
+    .tag{font-size:11px;border:1px solid #37675f;color:var(--accent);border-radius:20px;padding:5px 8px;white-space:nowrap}
+    .notice{font-size:12px;line-height:1.9;color:var(--muted);background:#0d1726;border-radius:12px;padding:12px;margin-top:12px}
+    #status{font-size:13px;color:var(--accent);min-height:22px;margin-top:8px}.empty{color:var(--muted);text-align:center;padding:20px 8px;font-size:13px}
+    footer{color:var(--muted);font-size:11px;text-align:center;margin-top:22px;line-height:1.9}
+  </style>
+</head>
+<body>
+<main>
+  <div class="top"><div><h1>Nearby Radar</h1><div class="sub">رادار دستگاه‌های نزدیک · نسخه وب</div></div><span class="pill">نسخه آزمایشی</span></div>
+  <section class="hero">
+    <div class="radar">⌁</div>
+    <strong>اسکن دستگاه‌های بلوتوث کم‌مصرف</strong>
+    <div class="sub">برای شروع، دکمه زیر را بزن و اجازه مرورگر را تأیید کن.</div>
+    <button id="scan">شروع اسکن بلوتوث</button>
+    <button id="stop">توقف اسکن</button>
+    <div id="status" role="status">آماده اسکن</div>
+  </section>
+  <div class="stats">
+    <div class="stat"><div class="num" id="count">۰</div><div class="small">دستگاه‌های ثبت‌شده</div></div>
+    <div class="stat"><div class="num" id="mode">BLE</div><div class="small">روش شناسایی</div></div>
+  </div>
+  <section class="panel">
+    <div class="section-title"><h2>دستگاه‌های پیدا شده</h2><span class="pill" id="live">آماده</span></div>
+    <div id="devices" class="empty">هنوز دستگاهی ثبت نشده است.</div>
+    <div class="notice">نام دستگاه فقط در صورتی نمایش داده می‌شود که دستگاه آن را در اطلاعات بلوتوث خود منتشر کند. بعضی دستگاه‌ها با نام «بدون نام» دیده می‌شوند.</div>
+  </section>
+  <section class="panel">
+    <div class="section-title"><h2>وضعیت سایر فناوری‌ها</h2></div>
+    <div class="device"><div><div class="device-name">Wi-Fi</div><div class="meta">فهرست شبکه‌های اطراف</div></div><span class="tag">محدودیت مرورگر</span></div>
+    <div class="device"><div><div class="device-name">هات‌اسپات</div><div class="meta">شناسایی مستقیم هات‌اسپات‌ها</div></div><span class="tag">محدودیت مرورگر</span></div>
+    <div class="device"><div><div class="device-name">Quick Share</div><div class="meta">فهرست دستگاه‌های آماده اشتراک‌گذاری</div></div><span class="tag">API عمومی ندارد</span></div>
+    <div class="notice">مرورگر وب اجازه اسکن آزاد Wi-Fi یا فهرست‌کردن همه دستگاه‌های Quick Share را نمی‌دهد. این بخش‌ها عمداً به‌عنوان محدودیت مشخص شده‌اند و نتیجه ساختگی نشان نمی‌دهند.</div>
+  </section>
+  <footer>اسکن فقط با اقدام و اجازه شما انجام می‌شود. این صفحه اطلاعات دستگاه‌های انتخاب‌شده/قابل‌مشاهده را نشان می‌دهد و برای شناسایی مخفیانه افراد یا دستگاه‌ها طراحی نشده است.</footer>
+</main>
+<script>
+(() => {
+  const scanBtn=document.getElementById('scan'), stopBtn=document.getElementById('stop');
+  const statusEl=document.getElementById('status'), devicesEl=document.getElementById('devices');
+  const countEl=document.getElementById('count'), liveEl=document.getElementById('live');
+  const found=new Map(); let scanner=null, scanning=false;
+  const fa=n=>new Intl.NumberFormat('fa-IR').format(n);
+  function render(){
+    countEl.textContent=fa(found.size);
+    if(!found.size){devicesEl.className='empty';devicesEl.textContent='هنوز دستگاهی ثبت نشده است.';return;}
+    devicesEl.className='';
+    devicesEl.replaceChildren();
+    for(const d of found.values()){
+      const row=document.createElement('div'); row.className='device';
+      const left=document.createElement('div');
+      const name=document.createElement('div');name.className='device-name';name.textContent=d.name||'دستگاه بدون نام';
+      const meta=document.createElement('div');meta.className='meta';meta.textContent=d.id||'شناسه در دسترس نیست';
+      left.append(name,meta);
+      const tag=document.createElement('span');tag.className='tag';tag.textContent=d.rssi!=null?`BLE · ${d.rssi} dBm`:'Bluetooth';
+      row.append(left,tag);devicesEl.append(row);
+    }
+  }
+  function setStatus(s){statusEl.textContent=s;}
+  function addDevice(d){
+    const key=d.id||d.name||('device-'+Date.now());
+    found.set(key,{name:d.name||'',id:d.id||'',rssi:typeof d.rssi==='number'?d.rssi:null});
+    render();
+  }
+  async function start(){
+    if(!navigator.bluetooth){setStatus('این مرورگر از Web Bluetooth پشتیبانی نمی‌کند. Chrome به‌روز را با HTTPS امتحان کن.');return;}
+    scanBtn.disabled=true;
+    try{
+      if(typeof navigator.bluetooth.requestLEScan==='function'){
+        scanner=await navigator.bluetooth.requestLEScan({acceptAllAdvertisements:true,keepRepeatedDevices:true});
+        navigator.bluetooth.addEventListener('advertisementreceived',onAdvertisement);
+        scanning=true;stopBtn.style.display='block';liveEl.textContent='در حال اسکن';
+        setStatus('اسکن BLE فعال شد. دستگاه‌های قابل‌مشاهده به‌تدریج اضافه می‌شوند.');
+      } else {
+        setStatus('اسکن پیوسته BLE در این مرورگر فعال نیست؛ فهرست انتخاب دستگاه باز می‌شود.');
+        const device=await navigator.bluetooth.requestDevice({acceptAllDevices:true});
+        addDevice({name:device.name,id:device.id});
+        setStatus('دستگاه انتخاب‌شده اضافه شد. برای انتخاب دستگاه دیگر دوباره اسکن را بزن.');
+      }
+    }catch(e){
+      if(e.name==='NotFoundError')setStatus('دستگاهی انتخاب نشد یا موردی پیدا نشد.');
+      else setStatus('اسکن شروع نشد: '+(e.message||e.name));
+    }finally{scanBtn.disabled=false;}
+  }
+  function onAdvertisement(e){addDevice({name:e.device.name,id:e.device.id,rssi:e.rssi});}
+  function stop(){
+    if(scanner){scanner.stop();scanner=null;}
+    navigator.bluetooth?.removeEventListener('advertisementreceived',onAdvertisement);
+    scanning=false;stopBtn.style.display='none';liveEl.textContent='متوقف';
+    setStatus('اسکن متوقف شد.');scanBtn.disabled=false;
+  }
+  scanBtn.addEventListener('click',start);stopBtn.addEventListener('click',stop);
+  if('serviceWorker' in navigator && location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+  render();
+})();
+</script>
+</body>
+</html>
